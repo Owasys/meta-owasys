@@ -1,0 +1,28 @@
+From ed8fa41cf36277261c7a4345e65a1f6deabe647b Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Thu, 25 Aug 2022 12:36:00 +0200
+Subject: [PATCH] Change in the selected Uart. Originally ATF Uart was Uart2,
+ but for our Owa5X it must be Uart1. Without that change the booting process
+ halts at Normal Boot Trying to boot from BOOTROM Find FIT header 0x&48032fa0,
+ size 855 Need continue download 1024 Download 907536, total fit 908656
+
+---
+ plat/imx/imx8m/imx8mp/include/platform_def.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plat/imx/imx8m/imx8mp/include/platform_def.h b/plat/imx/imx8m/imx8mp/include/platform_def.h
+index d32789c..c81c252 100644
+--- a/plat/imx/imx8m/imx8mp/include/platform_def.h
++++ b/plat/imx/imx8m/imx8mp/include/platform_def.h
+@@ -51,7 +51,7 @@
+ 
+ #define HAB_RVT_BASE			U(0x00000900) /* HAB_RVT for i.MX8MM */
+ 
+-#define IMX_BOOT_UART_BASE		U(0x30890000)
++#define IMX_BOOT_UART_BASE		U(0x30860000) /* Selected UART1 */   
+ #define IMX_BOOT_UART_CLK_IN_HZ		24000000 /* Select 24MHz oscillator */
+ 
+ #define PLAT_CRASH_UART_BASE		IMX_BOOT_UART_BASE
+-- 
+2.25.1
+

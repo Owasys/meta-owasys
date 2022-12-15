@@ -1,0 +1,9 @@
+[Unit]
+Description=pmsrv service
+
+[Service]
+ExecStart=/usr/bin/pmsrv
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

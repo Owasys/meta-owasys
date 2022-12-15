@@ -1,0 +1,20 @@
+# This optionfile works in OWASYS.
+#nodetach 
+#debug 
+#logfile /tmp/pppDebug
+/dev/ttyPPPD
+crtscts 
+lock
+linkname gprs 
+#115200 
+defaultroute
+noipdefault
+ipparam gsm
+ipcp-max-failure 4 
+ipcp-restart 3 
+#usepeerdns 
+noauth 
+novj 
+connect "/usr/sbin/chat -v -t 90 -f /etc/chatscripts/gsm"
+#USER - don't remove this part
+user euskaltel

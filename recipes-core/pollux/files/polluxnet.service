@@ -1,0 +1,25 @@
+[Unit]
+Description      = pollux-net service
+Wants            = pmsrv.service redis-server.service
+After            = syslog.target pmsrv.service network.target redis-server.service
+Requires         = pmsrv.service
+StopWhenUnneeded = no
+#ConditionPathExists=!/var/lock/owaapi.lck
+StartLimitInterval  = 5min
+StartLimitBurst     = 2
+StartLimitAction    = reboot
+
+[Service]
+ExecStartPre= /bin/mkdir -p /var/log/pollux
+ExecStartPre= /bin/sleep 5
+ExecStart   = /usr/bin/pollux-net --start
+ExecStop    = /usr/bin/pollux-net -q
+StandardOutput  = null
+StandardError   = null
+
+# In case if it gets stopped, restart it immediately
+Restart     = on-failure
+RestartSec  = 300
+
+[Install]
+WantedBy    = multi-user.target

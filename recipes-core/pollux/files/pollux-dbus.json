@@ -1,0 +1,19 @@
+{
+   "pollux-gps":{
+      "enable": 1,
+      "file": "/etc/pollux/gps.json",
+      "socket": "/tmp/pollux-gps.sock",
+      "pub": "gps",
+      "shmid": 10001,
+      "scan": 1000      
+   },
+   "pollux-net":{
+      "enable": 1,
+      "file": "/etc/pollux/net.json",
+      "socket": "/tmp/pollux-net.sock",
+      "pub": "net",
+      "shmid": 10002,
+      "scan": 1000,
+      "wdt": 300
+   }
+}
