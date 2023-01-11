@@ -77,7 +77,7 @@ compile_owa5x() {
     cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/u-boot-nodtb.bin-${MACHINE}-${UBOOT_CONFIG} ${BOOT_STAGING}/u-boot-nodtb.bin
 
     bbnote "copy mkimage_uboot from ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS} to ${BOOT_STAGING} "                                                             
-    cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/mkimage_uboot-${MACHINE}-${UBOOT_CONFIG} ${BOOT_STAGING}/mkimage_uboot
+    install -m 0755 ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/mkimage_uboot-${MACHINE}-${UBOOT_CONFIG} ${BOOT_STAGING}/mkimage_uboot
 
     bbnote "copy bl31.bin from ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/${ATF_MACHINE_NAME} to ${BOOT_STAGING} "
     cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/${ATF_MACHINE_NAME} ${BOOT_STAGING}/bl31.bin

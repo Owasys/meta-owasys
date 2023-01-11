@@ -2,7 +2,7 @@ SUMMARY = "First Owasys owa5x YOCTO image"
 
 IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devicetree"
 
-IMAGE_LINGUAS = " "
+IMAGE_LINGUAS = "en-us"
 
 LICENSE = "MIT"
 
@@ -54,18 +54,10 @@ IMAGE_INSTALL:append = " \
                         fstab \
                         resizefs-service \
 "
-#                        chatscripts \
-#                        fw-env-config \
-#                        issue-owa \
-#"
 
 do_image[depends] += " \
     mtd-utils-native:do_populate_sysroot \
 "
-
-# This recipe will take control once do_rootfs() has finished. This means that it will handle mostly do_image and do_image_complete
-#do_image() {
-#}
 
 make_custom_ubifs() {
 

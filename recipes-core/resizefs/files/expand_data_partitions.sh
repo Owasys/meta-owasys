@@ -10,6 +10,7 @@ if [ "$DEV_FSTAB" = "$STR_FSTAB" ]; then
    systemctl disable resizefs
    rm /etc/systemd/system/resizefs.service
 else
+
 echo "
 d
 4
@@ -37,7 +38,7 @@ p
 
 w" | fdisk /dev/mmcblk2
 
-   resize2fs /dev/mmcblk2p1
+   echo "y" | mkfs.ext4 /dev/mmcblk2p1
    echo "y" | mkfs.ext4 /dev/mmcblk2p2
    echo "/dev/mmcblk2p1    /data/            ext4          defaults         0      0" >> /etc/fstab
    echo "/dev/mmcblk2p2    /data_backup/     ext4          defaults         0      0" >> /etc/fstab
