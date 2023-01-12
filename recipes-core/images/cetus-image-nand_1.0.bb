@@ -19,7 +19,7 @@ IMAGE_INSTALL += "  iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
                     bluez5 imx-kobs inetutils redis libev  e2fsprogs-resize2fs \
                     hiredis tpm2-abrmd tpm2-tools tpm2-tss  \
-                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils \
+                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz \
 "
 
 IMAGE_INSTALL:append = " \
@@ -53,6 +53,7 @@ IMAGE_INSTALL:append = " \
                         device-folder \
                         fstab \
                         resizefs-service \
+                        mlanutl \
 "
 
 do_image[depends] += " \
