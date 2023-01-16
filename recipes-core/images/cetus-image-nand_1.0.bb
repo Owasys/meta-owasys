@@ -17,8 +17,8 @@ hostname:pn-base-files = "Cetus"
 
 IMAGE_INSTALL += "  iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
-                    bluez5 imx-kobs inetutils redis libev  e2fsprogs-resize2fs \
-                    hiredis tpm2-abrmd tpm2-tools tpm2-tss  \
+                    bluez5 imx-kobs inetutils redis libev e2fsprogs-resize2fs \
+                    hiredis tpm2-abrmd tpm2-tools tpm2-tss packagegroup-core-base-utils \
                     tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz \
 "
 
@@ -54,6 +54,7 @@ IMAGE_INSTALL:append = " \
                         fstab \
                         resizefs-service \
                         mlanutl \
+                        mff2select \
 "
 
 do_image[depends] += " \
