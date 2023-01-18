@@ -49,6 +49,7 @@ IMAGE_INSTALL:append = " \
                         ppp-owasys \
                         pollux-net \
                         pollux-gps \
+                        pollux-libs \
                         data-folder \
                         device-folder \
                         fstab \
