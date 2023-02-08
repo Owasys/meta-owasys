@@ -4,7 +4,7 @@ IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devic
 
 IMAGE_LINGUAS = "en-us"
 
-LICENSE = "MIT"
+LICENSE = "CLOSED"
 
 inherit core-image image_types
 
@@ -19,7 +19,7 @@ IMAGE_INSTALL += "  iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
                     bluez5 imx-kobs inetutils redis libev e2fsprogs-resize2fs \
                     hiredis tpm2-abrmd tpm2-tools tpm2-tss packagegroup-core-base-utils \
-                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz \
+                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz vim \
 "
 
 IMAGE_INSTALL:append = " \

@@ -30,6 +30,8 @@ do_install() {
   
   install ${WORKDIR}/pollux-dbus.json ${D}${sysconfdir}/pollux/
   install -m 0755 ${WORKDIR}/owa5x_an12       ${D}${bindir}
+  # create alias for this tool
+  ln -s ${bindir}/owa5x_an12    ${D}${bindir}/owasys_owa5x_an12
   install ${WORKDIR}/libpollux.so     ${D}${libdir}
 
   # create symbolic links from /usr/lib/libhiredis.0.14 to /usr/lib/libhiredis.1.0.0

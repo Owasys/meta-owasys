@@ -19,4 +19,8 @@ do_install() {
     # install the application into the /usr/bin folder with default permissions
     install ${WORKDIR}/sysclktohw ${D}${bindir}
     install ${WORKDIR}/hwclktosys ${D}${bindir}
+    # create alias for this tool
+    install -d ${D}/${base_bindir}
+    ln -s ${bindir}/sysclktohw    ${D}${base_bindir}/owasys_sysclktohw
+    ln -s ${bindir}/hwclktosys    ${D}${base_bindir}/owasys_hwclktosys
 }

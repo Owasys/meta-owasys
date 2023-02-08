@@ -13880,7 +13880,7 @@ index e3d84082f4..5f5a5b8673 100644
  #endif
 diff --git a/configs/imx8mp_owa5x_defconfig b/configs/imx8mp_owa5x_defconfig
 new file mode 100644
-index 0000000000..deb109a60a
+index 0000000000..20e12229a3
 --- /dev/null
 +++ b/configs/imx8mp_owa5x_defconfig
 @@ -0,0 +1,212 @@
@@ -14021,7 +14021,7 @@ index 0000000000..deb109a60a
 +CONFIG_SYSRESET=y
 +CONFIG_SYSRESET_PSCI=y
 +CONFIG_DM_THERMAL=y
-+CONFIG_NXP_TMU=y
++CONFIG_IMX_TMU=y
 +# CONFIG_USB_TCPC is not set
 +CONFIG_USB=y
 +CONFIG_USB_GADGET=y
@@ -14042,14 +14042,14 @@ index 0000000000..deb109a60a
 +
 +CONFIG_REGMAP=y
 +CONFIG_SYSCON=y
-+CONFIG_VIDEO_IMX_LCDIFV3=y
-+CONFIG_VIDEO_IMX_SEC_DSI=y
-+CONFIG_DM_VIDEO=y
-+CONFIG_VIDEO_LCD_RAYDIUM_RM67191=y
-+CONFIG_VIDEO_ADV7535=y
++CONFIG_VIDEO_IMX_LCDIFV3=n
++CONFIG_VIDEO_IMX_SEC_DSI=n
++CONFIG_DM_VIDEO=n
++CONFIG_VIDEO_LCD_RAYDIUM_RM67191=n
++CONFIG_VIDEO_ADV7535=n
 +CONFIG_SYS_WHITE_ON_BLACK=y
 +
-+CONFIG_LOCALVERSION="-1.0.4"
++CONFIG_LOCALVERSION="-1.0.5"
 +# CONFIG_LOCALVERSION_AUTO is not set
 +#NAND CONFIGURATION
 +CONFIG_NAND_BOOT=y
@@ -15399,7 +15399,7 @@ index 053895a2c0..a9e96772aa 100644
 \ No newline at end of file
 diff --git a/ucompilation.sh b/ucompilation.sh
 new file mode 100755
-index 0000000000..fda86692a1
+index 0000000000..09dc556cf7
 --- /dev/null
 +++ b/ucompilation.sh
 @@ -0,0 +1,25 @@
@@ -15425,6 +15425,6 @@ index 0000000000..fda86692a1
 +cp ./u-boot-nodtb.bin ./Install/u-boot-nodtb.bin
 +cp ./arch/arm/dts/imx8mp-owa5x.dtb ./Install/imx8mp-owa5x.dtb
 +
-+#cp ./Install/u-boot-spl.bin ../imx-mkimage/iMX8M/u-boot-spl.bin
-+#cp ./Install/u-boot-nodtb.bin ../imx-mkimage/iMX8M/u-boot-nodtb.bin
-+#cp ./Install/imx8mp-owa5x.dtb ../imx-mkimage/iMX8M/imx8mp-owa5x.dtb
++cp ./Install/u-boot-spl.bin ../imx-mkimage/iMX8M/u-boot-spl.bin
++cp ./Install/u-boot-nodtb.bin ../imx-mkimage/iMX8M/u-boot-nodtb.bin
++cp ./Install/imx8mp-owa5x.dtb ../imx-mkimage/iMX8M/imx8mp-owa5x.dtb

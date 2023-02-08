@@ -18,4 +18,7 @@ do_install() {
 
     # install the application into the /usr/bin folder with default permissions
     install ${WORKDIR}/Test_owa5x ${D}${bindir}
+    # create alias for this tool
+    install -d ${D}/${base_bindir}
+    ln -s ${bindir}/Test_owa5x    ${D}${base_bindir}/owasys_test_owa5x
 }

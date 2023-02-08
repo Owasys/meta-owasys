@@ -15,4 +15,7 @@ do_install() {
     
     # install the application into the /usr/bin folder with default permissions
     install -m 0755 ${WORKDIR}/mlanutl ${D}${bindir}
+    # create alias for this tool
+    install -d ${D}/${base_bindir}
+    ln -s ${bindir}/mlanutl    ${D}${base_bindir}/owasys_mlanutl
 }

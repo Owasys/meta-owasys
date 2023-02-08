@@ -17,4 +17,7 @@ do_install() {
     
     # install the application into the /usr/bin folder with default permissions
     install ${WORKDIR}/Start_CAN ${D}${bindir}
+    # create alias for this tool
+    install -d ${D}/${base_bindir}
+    ln -s ${bindir}/Start_CAN    ${D}${base_bindir}/owasys_start_can
 }
