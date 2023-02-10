@@ -1,9 +1,10 @@
 [Unit]
-Description=pmsrv service
+Description=pmsrv service, a service to open a socket comms with the oboard uprocessor and reset the HW watchdog.
+DefaultDependencies=no
 
 [Service]
 ExecStart=/usr/bin/pmsrv
 Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target system_maintenance.service
