@@ -38,7 +38,6 @@ IMAGE_INSTALL:append = " \
                         linux-firmware-owasys \
                         wpa-supplicant \
                         udev-rules-owasys \
-                        system-maintenance-service \
                         rtc-tools \
                         quectel-cm \
                         switch-gsm \
@@ -56,6 +55,9 @@ IMAGE_INSTALL:append = " \
                         resizefs-service \
                         mlanutl \
                         mff2select \
+                        sync-time-rtc \
+                        owasys-hw-sn-file \
+                        manage-hw-file \
 "
 
 do_image[depends] += " \

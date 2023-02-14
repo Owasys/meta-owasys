@@ -1,13 +1,13 @@
-DESCRIPTION = "Binary for system_maintenance.sh"
+DESCRIPTION = "Recipe to let system get date out from the RTC"
 SECTION = "Binaries"
 DEPENDS = ""
 LICENSE = "CLOSED"
 FILESEXTRAPATHS:prepend := "${THISDIR}/src:"
 
-SRC_URI = " file://system_maintenance.sh \
-            file://hwfile_create.sh \
-            file://hwvar_create.sh \
-            file://uboot_check.sh \
+inherit systemd
+
+SRC_URI = " file://sync-time-rtc.sh \
+            file://sync-time-rtc.service \
 "
 
 S = "${WORKDIR}"
@@ -15,16 +15,22 @@ RDEPENDS:${PN} += "bash"
 
 INSANE_SKIP:${PN} += "already-stripped"
 
+
+SYSTEMD_AUTO_ENABLE = "enable"
+SYSTEMD_SERVICE:${PN} ="sync-time-rtc.service"
+
 do_install() {
     # create the /usr/bin folder in the rootfs with default permissions
     install -d ${D}${bindir}
     install -m 0755 -d ${D}${sysconfdir}
 
     # install the application into the /usr/bin folder with default permissions
-    install ${WORKDIR}/system_maintenance.sh ${D}${bindir}
-    install ${WORKDIR}/hwfile_create.sh ${D}${bindir}
-    install ${WORKDIR}/hwvar_create.sh ${D}${bindir}
-    install ${WORKDIR}/uboot_check.sh ${D}${bindir}
+    install ${WORKDIR}/sync-time-rtc.sh  ${D}${bindir}
+
+    install -d ${D}/${systemd_unitdir}/system
+    install -m 0644 ${WORKDIR}/sync-time-rtc.service ${D}/${systemd_unitdir}/system
+
+
 }
 
 RDEPENDS:system-maintenace ?= "bash"
