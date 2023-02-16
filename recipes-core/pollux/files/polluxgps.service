@@ -22,3 +22,5 @@ RestartSec  = 300
 
 [Install]
 WantedBy    = multi-user.target
+Alias=owasysd-polluxgps.service
+

@@ -20,7 +20,7 @@ do_install() {
     install ${WORKDIR}/Mff2_Select ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/Mff2_Select    ${D}${base_bindir}/owasys_mff2_select
+    ln -s ${bindir}/Mff2_Select    ${D}${base_bindir}/owasys-mff2-select
 
 }
 

@@ -20,7 +20,7 @@ do_install() {
     install ${WORKDIR}/Switch_GSM ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/Switch_GSM    ${D}${base_bindir}/owasys_switch_gsm
+    ln -s ${bindir}/Switch_GSM    ${D}${base_bindir}/owasys-gsm
 }
 
 

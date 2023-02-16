@@ -7,3 +7,5 @@ ExecStart=/usr/bin/sync-time-rtc.sh
 
 [Install]
 WantedBy=multi-user.target
+Alias=owasysd-sync-time-rtc.service
+

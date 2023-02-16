@@ -13,7 +13,7 @@ inherit core-image image_types
 IMAGE_OVERHEAD_FACTOR ?= "1.0"
 IMAGE_ROOTFS_SIZE ?= "460000"
 IMAGE_FSTYPES += " tar.gz "
-hostname:pn-base-files = "Cetus"
+hostname:pn-base-files = ""
 
 IMAGE_INSTALL += "  iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
@@ -26,6 +26,7 @@ IMAGE_INSTALL:append = " \
                         pmsrv-service \
                         u-boot-owasys \
                         imx-boot-owasys \
+                        first-boot-operations \
                         alsa-lib \
                         owasys-libs \
                         kernel-modules\
@@ -33,6 +34,7 @@ IMAGE_INSTALL:append = " \
                         owastandby \
                         start-can \
                         start-bt-wifi \
+                        wifi-on-boot-service \
                         test-owa5x \
                         turn-gsm-off \
                         linux-firmware-owasys \
@@ -52,7 +54,6 @@ IMAGE_INSTALL:append = " \
                         data-folder \
                         device-folder \
                         fstab \
-                        resizefs-service \
                         mlanutl \
                         mff2select \
                         sync-time-rtc \

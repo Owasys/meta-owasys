@@ -21,6 +21,6 @@ do_install() {
     install ${WORKDIR}/hwclktosys ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/sysclktohw    ${D}${base_bindir}/owasys_sysclktohw
-    ln -s ${bindir}/hwclktosys    ${D}${base_bindir}/owasys_hwclktosys
+    ln -s ${bindir}/sysclktohw    ${D}${base_bindir}/owasys-sysclktohw
+    ln -s ${bindir}/hwclktosys    ${D}${base_bindir}/owasys-hwclktosys
 }

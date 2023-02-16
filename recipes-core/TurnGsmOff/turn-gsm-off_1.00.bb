@@ -20,5 +20,5 @@ do_install() {
     install ${WORKDIR}/TurnGsmOff ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/TurnGsmOff    ${D}${base_bindir}/owasys_turngsmoff
+    ln -s ${bindir}/TurnGsmOff    ${D}${base_bindir}/owasys-turngsmoff
 }

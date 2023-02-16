@@ -19,5 +19,5 @@ do_install() {
     install ${WORKDIR}/Start_CAN ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/Start_CAN    ${D}${base_bindir}/owasys_start_can
+    ln -s ${bindir}/Start_CAN    ${D}${base_bindir}/owasys-can
 }

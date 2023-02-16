@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!bin/bash
 #===============================================================================
 #
 #          FILE:  owasys-hw-sn-file.sh
@@ -50,7 +50,7 @@ done
 
 OWASYS_SN_FILE="/tmp/owasys-sn"
 OWASYS_SN=$(echo "get sn
-exit" | /bin/owasys_test_owa5x | grep "number" | cut -d " " -f 4)
+exit" | /bin/owasys-test-owa5x | grep "number" | cut -d " " -f 4)
 
 if [ -f '$OWASYS_SN_FILE' ];
 then

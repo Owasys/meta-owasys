@@ -19,5 +19,5 @@ do_install() {
     install ${WORKDIR}/quectel-CM ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/quectel-CM    ${D}${base_bindir}/owasys_quectel-cm
+    ln -s ${bindir}/quectel-CM    ${D}${base_bindir}/owasys-quectel-cm
 }

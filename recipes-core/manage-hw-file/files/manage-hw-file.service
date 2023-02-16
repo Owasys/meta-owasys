@@ -7,3 +7,5 @@ ExecStart=/usr/bin/manage-hw-file.sh
 
 [Install]
 WantedBy=multi-user.target
+Alias=owasysd-manage-hw-file.service
+

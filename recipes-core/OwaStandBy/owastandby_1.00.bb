@@ -20,5 +20,5 @@ do_install() {
     install ${WORKDIR}/OwaStandby ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/OwaStandby    ${D}${base_bindir}/owasys_owastandby
+    ln -s ${bindir}/OwaStandby    ${D}${base_bindir}/owasys-standby
 }

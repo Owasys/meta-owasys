@@ -27,7 +27,7 @@ fi
 if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
     echo 'Usage: ./script.sh arg-one arg-two
 
-   This script handles the hw.json file which holds info about the device HW written during owasys maufacturing process.
+   This script do amazing things.
 '
     exit
 fi

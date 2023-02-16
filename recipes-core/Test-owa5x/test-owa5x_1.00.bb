@@ -20,5 +20,5 @@ do_install() {
     install ${WORKDIR}/Test_owa5x ${D}${bindir}
     # create alias for this tool
     install -d ${D}/${base_bindir}
-    ln -s ${bindir}/Test_owa5x    ${D}${base_bindir}/owasys_test_owa5x
+    ln -s ${bindir}/Test_owa5x    ${D}${base_bindir}/owasys-test-owa5x
 }
