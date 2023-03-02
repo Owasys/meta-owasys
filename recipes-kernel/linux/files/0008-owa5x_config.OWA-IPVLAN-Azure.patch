@@ -1,0 +1,72 @@
+From 4abb271bc45e03e745c4117dc37d9c606911a767 Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Wed, 1 Mar 2023 17:03:53 +0100
+Subject: [PATCH] <owa5x_config.OWA> IPVLAN Azure
+
+Added needed configs for it according to commit 524a02b5915064393d6f16875ff782905090181b
+on linux-imx.
+
+Changelog: added.
+Signed-off-by: Alvaro Guzman <alvaro.guzman@owasys.com>
+---
+ owa5x_config.OWA | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/owa5x_config.OWA b/owa5x_config.OWA
+index d39166131..d21395e7b 100644
+--- a/owa5x_config.OWA
++++ b/owa5x_config.OWA
+@@ -1033,7 +1033,7 @@ CONFIG_NF_CT_PROTO_DCCP=y
+ CONFIG_NF_CT_PROTO_SCTP=y
+ CONFIG_NF_CT_PROTO_UDPLITE=y
+ # CONFIG_NF_CONNTRACK_AMANDA is not set
+-# CONFIG_NF_CONNTRACK_FTP is not set
++CONFIG_NF_CONNTRACK_FTP=m
+ # CONFIG_NF_CONNTRACK_H323 is not set
+ # CONFIG_NF_CONNTRACK_IRC is not set
+ # CONFIG_NF_CONNTRACK_NETBIOS_NS is not set
+@@ -1041,9 +1041,11 @@ CONFIG_NF_CT_PROTO_UDPLITE=y
+ # CONFIG_NF_CONNTRACK_PPTP is not set
+ # CONFIG_NF_CONNTRACK_SANE is not set
+ # CONFIG_NF_CONNTRACK_SIP is not set
+-# CONFIG_NF_CONNTRACK_TFTP is not set
++CONFIG_NF_CONNTRACK_TFTP=m
+ # CONFIG_NF_CT_NETLINK is not set
+ CONFIG_NF_NAT=m
++CONFIG_NF_NAT_FTP=m
++CONFIG_NF_NAT_TFTP=m
+ CONFIG_NF_NAT_REDIRECT=y
+ CONFIG_NF_NAT_MASQUERADE=y
+ # CONFIG_NF_TABLES is not set
+@@ -1372,7 +1374,7 @@ CONFIG_DNS_RESOLVER=y
+ # CONFIG_NET_NSH is not set
+ # CONFIG_HSR is not set
+ CONFIG_NET_SWITCHDEV=y
+-# CONFIG_NET_L3_MASTER_DEV is not set
++CONFIG_NET_L3_MASTER_DEV=y
+ CONFIG_QRTR=m
+ CONFIG_QRTR_SMD=m
+ CONFIG_QRTR_TUN=m
+@@ -2254,7 +2256,7 @@ CONFIG_NETDEVICES=y
+ CONFIG_MII=y
+ CONFIG_NET_CORE=y
+ CONFIG_BONDING=y
+-# CONFIG_DUMMY is not set
++CONFIG_DUMMY=m
+ CONFIG_WIREGUARD=m
+ # CONFIG_WIREGUARD_DEBUG is not set
+ # CONFIG_EQUALIZER is not set
+@@ -2263,7 +2265,9 @@ CONFIG_WIREGUARD=m
+ # CONFIG_NET_TEAM is not set
+ CONFIG_MACVLAN=m
+ CONFIG_MACVTAP=m
+-# CONFIG_IPVLAN is not set
++CONFIG_IPVLAN_L3S=y
++CONFIG_IPVLAN=m
++# CONFIG_IPVTAP is not set
+ # CONFIG_VXLAN is not set
+ # CONFIG_GENEVE is not set
+ # CONFIG_BAREUDP is not set
+-- 
+2.25.1
+

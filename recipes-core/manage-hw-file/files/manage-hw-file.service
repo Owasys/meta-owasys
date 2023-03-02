@@ -1,11 +1,11 @@
 [Unit]
-Description=Handles hw.json file
-After=pmsrv.service
+Description = Handles hw.json file
+After       = owasysd-pmsrv-ready.service
 
 [Service]
-ExecStart=/usr/bin/manage-hw-file.sh
+ExecStart   = /usr/bin/manage-hw-file.sh
 
 [Install]
-WantedBy=multi-user.target
-Alias=owasysd-manage-hw-file.service
+WantedBy    = multi-user.target
+Alias       = owasysd-manage-hw-file.service
 

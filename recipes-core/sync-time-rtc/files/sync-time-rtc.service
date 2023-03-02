@@ -1,6 +1,6 @@
 [Unit]
-Description=System gets time out from the RTC
-After=pmsrv.service
+Description     = System gets time out from the RTC
+After           = owasysd-pmsrv-ready.service
 
 [Service]
 ExecStart=/usr/bin/sync-time-rtc.sh

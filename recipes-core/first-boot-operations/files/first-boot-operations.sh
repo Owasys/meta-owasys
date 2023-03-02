@@ -1,34 +1,28 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE:  <name>.sh
+#          FILE:  first-boot-operations.sh
 #
-#         USAGE:  ./<name>.sh
-#         DEBUG:  TRACE=1 ./<name>.sh
+#         USAGE:  ./first-boot-operations.sh
+#         DEBUG:  TRACE=1 ./first-boot-operations.sh
 #
 #   DESCRIPTION: External script to do this or that
 #
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
 #          BUGS:  ---
-#        AUTHOR:  owzxxx
+#        AUTHOR:  owzagj
 #       COMPANY:  Owasys SL
 #       VERSION:  0.0.1
-#       CREATED:  YYYY-MM-DD
+#       CREATED:  2023-02-21
 #===============================================================================
 
 main() {
 
 expand_data_partitions
-create_owasys_user
+create_symlinks
 clean_myself
 
-}
-
-create_owasys_user()
-{
-   useradd -s /bin/bash -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'owasys') 'owasys'
-   usermod -aG sudo owasys
 }
 
 expand_data_partitions() 
@@ -78,6 +72,14 @@ w" | fdisk /dev/mmcblk2
    mount -a
 
 fi
+}
+
+create_symlinks() 
+{
+   mkdir -p /data/home/db
+   mkdir -p /data/var/log
+   ln -s /data/home/db /home/db
+   ln -s /data/var/log /home/log 
 }
 
 clean_myself()

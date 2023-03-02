@@ -1,0 +1,55 @@
+From fb671599a06a9f49e0c19a3eb58865b50a004f2d Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Wed, 1 Mar 2023 11:12:55 +0100
+Subject: [PATCH 1/4] <imx8mp-owa5x.dts> Disabled hdmi.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+A bug was detected when testing low power modes with owa5x_AN8. It hanged when going
+to standby mode. After digging in the rabbit hole I found the kernel trace:
+
+[  126.940571] imx-blk-ctrl 32fc0000.hdmi-blk-ctrl: calling genpd_suspend_noirq+0x0/0x18 @ 529, parent: 30c00000.bus
+
+And it made suspect about the HDMI.
+Finally as we aren't using it I just disabled the HDMI and voilà, it worked.
+
+Changelog: Fixed
+Signed-off-by: Alvaro Guzman <alvaro.guzman@owasys.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mp-owa5x.dts | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-owa5x.dts b/arch/arm64/boot/dts/freescale/imx8mp-owa5x.dts
+index 7443f175d..3dd9d8fb9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-owa5x.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-owa5x.dts
+@@ -318,8 +318,24 @@ ldo5_reg: regulator@10 {
+ 	};
+ };
+ 
++&irqsteer_hdmi {
++	status = "disabled";
++};
++
++&hdmi_blk_ctrl {
++	status = "disabled";
++};
++
++&hdmi_pavi {
++	status = "disabled";
++};
++
++&hdmi {
++	status = "disabled";
++};
++
+ &hdmiphy {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &flexcan1 {
+-- 
+2.25.1
+

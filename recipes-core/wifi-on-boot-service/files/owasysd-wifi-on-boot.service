@@ -1,16 +1,16 @@
 
 [Unit]
-Description=Systemd services used for powering up Wifi/BLE module on boot using Owasys tools
-After=pmsrv.service
-Requires=pmsrv.service
-      
+Description     = Systemd services used for powering up Wifi/BLE module on boot using Owasys tools
+After           = owasysd-pmsrv-ready.service
+
 [Service]   
-Type=oneshot 
-RestartSec=10     
-Restart=on-failure
-StartLimitBurst= 2                
-ExecStart=/usr/bin/Start_BT_WiFi 1
-StandardOutput=journal
+Type            = oneshot 
+RestartSec      = 10     
+Restart         = on-failure
+StartLimitBurst = 2
+ExecStartPre    = /bin/sleep 2
+ExecStart       = /usr/bin/Start_BT_WiFi 1
+StandardOutput  = journal
          
 [Install]                 
-WantedBy=multi-user.target
+WantedBy        = multi-user.target

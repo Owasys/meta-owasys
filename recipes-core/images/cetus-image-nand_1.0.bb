@@ -1,25 +1,19 @@
-SUMMARY = "First Owasys owa5x YOCTO image"
-
-IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devicetree"
-
+SUMMARY = "First Owasys owa5X YOCTO image"
 IMAGE_LINGUAS = "en-us"
-
 LICENSE = "CLOSED"
 
-inherit core-image image_types
-
+inherit core-image image_types 
 
 # Set rootfs to 460MiB by default
 IMAGE_OVERHEAD_FACTOR ?= "1.0"
 IMAGE_ROOTFS_SIZE ?= "460000"
 IMAGE_FSTYPES += " tar.gz "
-hostname:pn-base-files = ""
-
-IMAGE_INSTALL += "  iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
+IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devicetree"
+IMAGE_INSTALL += "  systemd-analyze iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
-                    bluez5 imx-kobs inetutils redis libev e2fsprogs-resize2fs \
+                    bluez5 imx-kobs inetutils libev e2fsprogs-resize2fs redis \
                     hiredis tpm2-abrmd tpm2-tools tpm2-tss packagegroup-core-base-utils \
-                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz vim \
+                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz vim docker-ce \
 "
 
 IMAGE_INSTALL:append = " \
@@ -56,10 +50,27 @@ IMAGE_INSTALL:append = " \
                         fstab \
                         mlanutl \
                         mff2select \
-                        sync-time-rtc \
-                        owasys-hw-sn-file \
-                        manage-hw-file \
+                        system-maintenance \
+                        system-maintenance-service \
+                        owasysd-pmsrv-ready \
 "
+
+hostname:pn-base-files = ""
+inherit extrausers
+
+# Encrypt the password 'example', using $mkpasswd -m sha-512 example -s "11223344"
+EXTRA_USERS_PARAMS = "\
+    usermod -p '\$6\$75920571\$AWaW0t3hK.zgl8TVCxyvhfw3xMv0S4SmMvkUgS0lQF5Sq2M8E6qAemab22iD/a.EryeFPz.Eym/Vn2Fzazvef.' root; \
+	useradd -p '\$6\$75920571\$KFBliyUh3yluZQbWWpY8jDgASgj1UgB8HsYjLSySKToJPATn0yQGPiyz.zEdDJtAMBxdDIPqhuSUxs.Y1eVor1' owasys; \
+	usermod -aG sudo owasys; \
+"
+
+# Here we give sudo access to sudo members
+update_sudoers(){
+    sed -i 's/# %sudo/%sudo/' ${IMAGE_ROOTFS}/etc/sudoers
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "update_sudoers;"
 
 do_image[depends] += " \
     mtd-utils-native:do_populate_sysroot \

@@ -1,6 +1,5 @@
 [Unit]
-Description=pmsrv service, a service to open a socket comms with the oboard uprocessor and reset the HW watchdog.
-DefaultDependencies=no
+Description=pmsrv service, a service to open a socket comms with the onboard uprocessor and reset the HW watchdog.
 
 [Service]
 ExecStart=/usr/bin/pmsrv

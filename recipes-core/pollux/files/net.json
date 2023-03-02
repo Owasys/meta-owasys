@@ -15,7 +15,7 @@
    },
   "min_rssi": 4,
   "sim_on_chip": {
-        "enabled": true,
+        "enabled": false,
         "code": "",
         "file": "/etc/pollux/gprs.net"
      },

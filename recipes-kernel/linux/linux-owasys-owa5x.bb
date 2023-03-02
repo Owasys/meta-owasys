@@ -12,7 +12,15 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 # SRC_URI to inject your defconfig in a bbappend.
 # KERNEL_SRC ?= "git://source.codeaurora.org/external/imx/linux-imx.git;protocol=https"
 SRC_URI = " git://source.codeaurora.org/external/imx/linux-imx.git;protocol=https;branch=${SRCBRANCH} \
-            file://patch_kernel_5.10.72_1.0.7.patch \
+            file://0000-patch_kernel_5.10.72_1.0.7.patch \
+            file://0001-imx8mp-owa5x.dts-Disabled-hdmi.patch \
+            file://0002-owa5x_config.OWA-Added-can-ISOTP.patch \
+            file://0003-new-eMMC-and-LAN8710.patch \
+            file://0004-LED_TRIGGERS-Added-several.patch \
+            file://0005-owa5x_config.OWA-BPF-for-docker-installation.patch \
+            file://0006-owa5x_config.OWA-Bosch-Iptables.patch \
+            file://0007-owa5x_config.OWA-Wireguard.patch \
+            file://0008-owa5x_config.OWA-IPVLAN-Azure.patch \
 "
 
 LINUX_VERSION = "5.10.72"
@@ -24,10 +32,6 @@ KBUILD_DEFCONFIG ?= ""
 KBUILD_DEFCONFIG:owa5x= "defconfig"
 
 KERNEL_CONFIG_COMMAND = "oe_runmake_call ${PARALLEL_MAKE} -C ${S} CC="${KERNEL_CC}" O=${B} ${KBUILD_DEFCONFIG_owa5x}"
-
-FILES:${PN} += " \
-            file://patch_kernel_5.10.72_1.0.7.patch \
-"
 
 # Deploy symbols to allow for device tree overlays
 EXTRA_OEMAKE += "DTC_FLAGS=-@ "
