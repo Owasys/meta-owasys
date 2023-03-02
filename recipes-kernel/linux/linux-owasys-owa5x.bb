@@ -21,6 +21,7 @@ SRC_URI = " git://source.codeaurora.org/external/imx/linux-imx.git;protocol=http
             file://0006-owa5x_config.OWA-Bosch-Iptables.patch \
             file://0007-owa5x_config.OWA-Wireguard.patch \
             file://0008-owa5x_config.OWA-IPVLAN-Azure.patch \
+            file://0009-owa5x_config.OWA-Bridge-netfilter.patch \
 "
 
 LINUX_VERSION = "5.10.72"
@@ -31,7 +32,7 @@ COMPATIBLE_MACHINE = "(owa5x)"
 KBUILD_DEFCONFIG ?= ""
 KBUILD_DEFCONFIG:owa5x= "defconfig"
 
-KERNEL_CONFIG_COMMAND = "oe_runmake_call ${PARALLEL_MAKE} -C ${S} CC="${KERNEL_CC}" O=${B} ${KBUILD_DEFCONFIG_owa5x}"
+KERNEL_CONFIG_COMMAND = "oe_runmake_call ${PARALLEL_MAKE} -C ${S} CC="${KERNEL_CC}" O=${B} ${KBUILD_DEFCONFIG:owa5x}"
 
 # Deploy symbols to allow for device tree overlays
 EXTRA_OEMAKE += "DTC_FLAGS=-@ "
@@ -42,6 +43,7 @@ do_configure:prepend(){
     if [ -e .config ]; then
         rm .config
     fi
+    bbnote "Copying Owasys Defconfig from do_configure:prepend()"
     cp ${S}/owa5x_config.OWA ${S}/arch/arm64/configs/defconfig
 }
 
