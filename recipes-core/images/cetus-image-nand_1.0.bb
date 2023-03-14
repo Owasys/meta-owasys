@@ -137,5 +137,12 @@ make_custom_ext4_partition () {
 	#mkfs.ext4 -F ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.$fstype -d ${IMAGE_ROOTFS}/data
 }
 
+generate_rootfs_fingerprints () {
+    # Generate fingerprints file for root filesystem
+    find ${IMAGE_ROOTFS} -xdev -type f \
+        -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | \
+        sort -k2 >${IMGDEPLOYDIR}/${IMAGE_NAME}${vname}.fingerprint
+}
 
-IMAGE_POSTPROCESS_COMMAND += " make_custom_ubifs; "
+
+IMAGE_POSTPROCESS_COMMAND += " generate_rootfs_fingerprints; make_custom_ubifs; "

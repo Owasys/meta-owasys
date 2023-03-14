@@ -1,4 +1,6 @@
-LICENSE = "CLOSED"
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM ="file://${COMPANY_CUSTOM_LICENSES}/OWASYS_Propietary_SW_License_Agreement.md;md5=203a753c44e11367199c31c2168fa959"
+
 inherit systemd
 
 RDEPENDS:${PN} += " dbus libev "
@@ -10,7 +12,7 @@ SRC_URI = " file://gprs.net \
             file://polluxnet.service \
 "
 INSANE_SKIP:${PN} += "already-stripped dev-so"
-SYSTEMD_AUTO_ENABLE = "enable"
+SYSTEMD_AUTO_ENABLE = "disable"
 SYSTEMD_SERVICE:${PN} ="polluxnet.service"
 
 SOLIBS = ".so"

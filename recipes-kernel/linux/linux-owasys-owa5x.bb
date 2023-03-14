@@ -22,6 +22,7 @@ SRC_URI = " git://source.codeaurora.org/external/imx/linux-imx.git;protocol=http
             file://0007-owa5x_config.OWA-Wireguard.patch \
             file://0008-owa5x_config.OWA-IPVLAN-Azure.patch \
             file://0009-owa5x_config.OWA-Bridge-netfilter.patch \
+            file://0010-owa5x_config.OWA-sdma-driver.patch \
 "
 
 LINUX_VERSION = "5.10.72"

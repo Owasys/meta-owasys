@@ -1,6 +1,7 @@
 [Unit]
-Description=Sytem maintenance service
-After=pmsrv.service
+Description = Sytem maintenance service, a service to handle hw.json file
+Wants   = owasysd-pmsrv-ready.service
+After   = owasysd-pmsrv-ready.service
 
 [Service]
 ExecStart=/usr/bin/system_maintenance.sh
