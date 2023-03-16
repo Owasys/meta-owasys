@@ -48,14 +48,15 @@ do_install() {
     # create symbolic links from /usr/lib/owasys to /lib/
 
     install -d ${D}/${nonarch_base_libdir}
-    ln -s ${libdir}/owasys/libFMS_Module.so.1.1.4     ${D}/${nonarch_base_libdir}/libFMS_Module.so
-    ln -s ${libdir}/owasys/libGPS2_Module.so.1.0.16   ${D}/${nonarch_base_libdir}/libGPS2_Module.so
-    ln -s ${libdir}/owasys/libGSM_Module.so.1.0.19    ${D}/${nonarch_base_libdir}/libGSM_Module.so
-    ln -s ${libdir}/owasys/libINET_Module.so.1.0.5    ${D}/${nonarch_base_libdir}/libINET_Module.so
-    ln -s ${libdir}/owasys/libIOs_Module.so.1.0.16    ${D}/${nonarch_base_libdir}/libIOs_Module.so
-    ln -s ${libdir}/owasys/libRTU_Module.so.1.0.18    ${D}/${nonarch_base_libdir}/libRTU_Module.so
+    ln -s -r ${D}/${libdir}/owasys/libFMS_Module.so.1.1.4     ${D}${nonarch_base_libdir}/libFMS_Module.so
+    ln -s -r ${D}/${libdir}/owasys/libGPS2_Module.so.1.0.16   ${D}${nonarch_base_libdir}/libGPS2_Module.so
+    ln -s -r ${D}/${libdir}/owasys/libGSM_Module.so.1.0.19    ${D}${nonarch_base_libdir}/libGSM_Module.so
+    ln -s -r ${D}/${libdir}/owasys/libINET_Module.so.1.0.5    ${D}${nonarch_base_libdir}/libINET_Module.so
+    ln -s -r ${D}/${libdir}/owasys/libIOs_Module.so.1.0.16    ${D}${nonarch_base_libdir}/libIOs_Module.so
+    ln -s -r ${D}/${libdir}/owasys/libRTU_Module.so.1.0.18    ${D}${nonarch_base_libdir}/libRTU_Module.so
 
 #****************************** HEADERS SECTION**************************************
+# This is added so headers are integrated into the SDK 
 
     install -d ${D}${includedir}/owa5x
 
