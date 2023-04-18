@@ -9,8 +9,8 @@ SYSTEMD_SERVICE:${PN} ="owasysd-wifi-on-boot.service"
 SRC_URI:append = " file://owasysd-wifi-on-boot.service "
 
 do_install () {
-   install -d ${D}/${systemd_unitdir}/system
-   install -m 644 ${WORKDIR}/owasysd-wifi-on-boot.service ${D}/${systemd_unitdir}/system
+   install -d ${D}${sysconfdir}/systemd/system
+   install -m 644 ${WORKDIR}/owasysd-wifi-on-boot.service ${D}${sysconfdir}/systemd/system
 }
 
 SYSTEMD_SERVICE:${PN} = "owasysd-wifi-on-boot.service"

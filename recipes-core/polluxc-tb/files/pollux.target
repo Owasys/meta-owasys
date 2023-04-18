@@ -1,0 +1,10 @@
+[Unit]
+Description	    =	Pollux Target, which runs at boot
+Requires	    =	multi-user.target
+# Wants is the same that pollux.target.wants symlinks
+# Wants		    =	pollux-net.service pollux-gps.service pollux-can.service pollux-device.service polluxd.service pollux-time.service polluxc-tb.service tb_commands.service tb_attributes.service
+After		    =	syslog.target pmsrv.service checklock.service
+AllowIsolate	=	yes
+
+[Install]
+WantedBy    = multi-user.target

@@ -4,11 +4,14 @@ LICENSE = "CLOSED"
 
 inherit core-image image_types 
 
+# Adding machine learning tools to the SDK
+TOOLCHAIN_TARGET_TASK:append = " tensorflow-lite-dev onnxruntime-dev"
+
 # Set rootfs to 460MiB by default
 IMAGE_OVERHEAD_FACTOR ?= "1.0"
-IMAGE_ROOTFS_SIZE ?= "460000"
+IMAGE_ROOTFS_SIZE ?= "500000"
 IMAGE_FSTYPES += " tar.gz "
-IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devicetree"
+IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devicetree packagegroup-imx-ml "
 IMAGE_INSTALL += "  systemd-analyze iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
                     bluez5 imx-kobs inetutils libev e2fsprogs-resize2fs redis \

@@ -3,7 +3,7 @@ LIC_FILES_CHKSUM ="file://${COMPANY_CUSTOM_LICENSES}/OWASYS_Propietary_SW_Licens
 
 inherit systemd
 
-RDEPENDS:${PN} += " dbus libev "
+RDEPENDS:${PN} += " dbus libev pollux-libs "
 
 SRC_URI = " file://gprs.net \
             file://net.json \

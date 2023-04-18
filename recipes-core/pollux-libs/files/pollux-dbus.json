@@ -15,5 +15,13 @@
       "shmid": 10002,
       "scan": 1000,
       "wdt": 300
-   }
+   },
+   "polluxc-tb":{
+      "enable": 1,
+      "file": "/etc/pollux/tb.json",
+      "socket": "/tmp/polluxc-tb.sock",
+      "pub": "tb",
+      "shmid": 20004,
+      "scan": 300
+  }
 }

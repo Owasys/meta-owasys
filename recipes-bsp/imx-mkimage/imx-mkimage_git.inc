@@ -2,7 +2,7 @@ DEPENDS = "zlib-native openssl-native"
 FILESEXTRAPATHS:prepend := "${THISDIR}/src:"
 
 
-SRC_URI = " git://source.codeaurora.org/external/imx/imx-mkimage.git;protocol=https;branch=${SRCBRANCH} \
+SRC_URI = " git://github.com/nxp-imx/imx-mkimage.git;protocol=https;branch=${SRCBRANCH} \
             file://0001-Changed-dtb-name-in-soc.mak.patch \
             file://lpddr4_pmu_train_1d_dmem_202006.bin \
             file://lpddr4_pmu_train_1d_imem_202006.bin \

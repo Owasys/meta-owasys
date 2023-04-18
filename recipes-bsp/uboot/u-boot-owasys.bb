@@ -8,7 +8,7 @@ DEPENDS += "bc-native dtc-native bison-native imx-atf-owasys"
 
 SRCREV = "8372631b287e98ffda15d6412a38ebe37433ea0b"
 SRCBRANCH = "lf_v2021.04"
-SRC_URI = " git://source.codeaurora.org/external/imx/uboot-imx.git;protocol=https;branch=${SRCBRANCH} \
+SRC_URI = " git://github.com/nxp-imx/uboot-imx.git;protocol=https;branch=${SRCBRANCH} \
             file://0001-patch_uboot_5.10.72_1.0.5.patch \
 "
 

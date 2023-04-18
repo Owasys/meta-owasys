@@ -1,0 +1,17 @@
+[Unit]
+Description     = DM attributes service
+Wants           = pmsrv.service redis-server.service
+After           = syslog.service pmsrv.service redis-server.service
+StopWhenUnneeded= no
+PartOf          = pollux.target
+
+[Service]
+ExecStart       = /home/scripts/tb_attributes.sh
+ExecStop        = /bin/kill -s TERM $MAINPID
+ExecStartPost   = /bin/sh -c 'umask 022; /usr/bin/pgrep -fo tb_attributes.sh > /var/run/tb_attributes.pid'
+PIDFile         = /var/run/tb_attributes.pid
+Restart         = on-failure
+RestartSec      = 60
+
+[Install]
+WantedBy    = pollux.target

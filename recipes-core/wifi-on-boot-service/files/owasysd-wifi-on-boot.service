@@ -9,7 +9,10 @@ RestartSec      = 10
 Restart         = on-failure
 StartLimitBurst = 2
 ExecStartPre    = /bin/sleep 2
-ExecStart       = /usr/bin/Start_BT_WiFi 1
+ExecStartPre    = /usr/bin/Start_BT_WiFi 1
+ExecStartPre    = /usr/sbin/wpa_supplicant -B w -D nl80211  -i mlan0 -c /etc/wpa_supplicant.conf
+ExecStartPre    = /bin/sleep 5
+ExecStart       = /sbin/udhcpc -i mlan0
 StandardOutput  = journal
          
 [Install]                 

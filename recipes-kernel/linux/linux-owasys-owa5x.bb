@@ -10,8 +10,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 # The recipe by default uses KBUILD_DEFCONFIG from the machine
 # configuration. Set KBUILD_DEFCONFIG = "" and add a file 'defconfig' to
 # SRC_URI to inject your defconfig in a bbappend.
-# KERNEL_SRC ?= "git://source.codeaurora.org/external/imx/linux-imx.git;protocol=https"
-SRC_URI = " git://source.codeaurora.org/external/imx/linux-imx.git;protocol=https;branch=${SRCBRANCH} \
+SRC_URI = " git://github.com/nxp-imx/linux-imx.git;protocol=https;branch=${SRCBRANCH} \
             file://0000-patch_kernel_5.10.72_1.0.7.patch \
             file://0001-imx8mp-owa5x.dts-Disabled-hdmi.patch \
             file://0002-owa5x_config.OWA-Added-can-ISOTP.patch \
