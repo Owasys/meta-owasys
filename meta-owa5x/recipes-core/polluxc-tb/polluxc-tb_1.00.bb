@@ -79,7 +79,7 @@ RPROVIDES:${PN} += " \
                     libdbus-1.so.3(LIBDBUS_1_3)(64bit) \
                     libmnl.so.0(LIBMNL_1.0)(64bit) \
                     libmnl.so.0()(64bit) \
-                    libcrypto.so.1.1()(64bit) \
+                    libcrypto.so.3()(64bit) \
                     libpaho-mqtt3as.so.1()(64bit) \
-                    libcrypto.so.1.1(OPENSSL_1_1_0)(64bit) \
+                    libcrypto.so.3(OPENSSL_3.0.0)(64bit) \
 "

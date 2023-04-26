@@ -14,7 +14,7 @@ SRC_URI = " git://github.com/nxp-imx/uboot-imx.git;protocol=https;branch=${SRCBR
 
 COMPATIBLE_MACHINE = "(owa5x)"
 
-#UBOOT_INITIAL_ENV = "u-boot-initial-env"
+UBOOT_INITIAL_ENV = "u-boot-initial-env"
 BOOT_TOOLS = "imx-boot-tools"
 PROVIDES += "u-boot-owasys"
 S = "${WORKDIR}/git"

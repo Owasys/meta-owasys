@@ -13,7 +13,7 @@ IMAGE_INSTALL += "  systemd-analyze iw mtd-utils mtd-utils-ubifs can-utils opens
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
                     bluez5 imx-kobs inetutils libev e2fsprogs-resize2fs redis \
                     hiredis tpm2-abrmd tpm2-tools tpm2-tss packagegroup-core-base-utils \
-                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz vim packagegroup-rauc \
+                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz vim \
 "
 
 IMAGE_INSTALL:append = " \
@@ -51,6 +51,7 @@ IMAGE_INSTALL:append = " \
                         system-maintenance-service \
                         owasysd-pmsrv-ready \
                         packagegroup-pollux \
+                        packagegroup-rauc \
 "
 
 hostname:pn-base-files = ""

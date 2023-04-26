@@ -2,7 +2,7 @@
    "name": "tb",
    "connection": {
       "protocol": "ssl",
-      "host": "odm.owasys.com",
+      "host": "eu-central-1c.main-NLB-36cd82019e20d1d3.elb.eu-central-1.amazonaws.com",
       "port": 8883,
       "trustfile": "/etc/ssl/certs/owasys_chain.pem",
       "keepalive": 2400,
@@ -10,8 +10,8 @@
       "report_tlm": 10,
       "report_att": 2,
       "tcp_keepalive": 10,
-      "time_off": 60,
-      "time_on": 30
+      "time_off": 0,
+      "time_on": 0
    },
    "auth": {
       "client-id": "",
