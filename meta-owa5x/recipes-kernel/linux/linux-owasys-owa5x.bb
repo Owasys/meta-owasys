@@ -32,14 +32,12 @@ COMPATIBLE_MACHINE = "(owa5x)"
 KBUILD_DEFCONFIG ?= ""
 KBUILD_DEFCONFIG:owa5x= "defconfig"
 
-KERNEL_CONFIG_COMMAND = "oe_runmake_call ${PARALLEL_MAKE} -C ${S} CC="${KERNEL_CC}" O=${B} ${KBUILD_DEFCONFIG:owa5x}"
-
 # Deploy symbols to allow for device tree overlays
 EXTRA_OEMAKE += "DTC_FLAGS=-@ "
 
 KERNEL_MODULE_AUTOLOAD += " owa5x_gpio "
 
-do_configure:prepend(){
+do_patch:append(){
     if [ -e .config ]; then
         rm .config
     fi
