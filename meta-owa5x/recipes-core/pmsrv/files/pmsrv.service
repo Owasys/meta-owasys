@@ -1,5 +1,8 @@
 [Unit]
 Description=pmsrv service, a service to open a socket comms with the onboard uprocessor and reset the HW watchdog.
+DefaultDependencies=no
+Requires=systemd-tmpfiles-setup-dev.service systemd-tmpfiles-setup.service local-fs.target
+After=systemd-tmpfiles-setup-dev.service systemd-tmpfiles-setup.service local-fs.target
 
 [Service]
 ExecStart=/usr/bin/pmsrv
