@@ -10,4 +10,5 @@ RDEPENDS:${PN} = "\
     paho-mqtt-c \
     rauc \
     casync \
+    owasysd-boot-check \
 "

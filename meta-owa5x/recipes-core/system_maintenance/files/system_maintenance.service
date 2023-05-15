@@ -4,8 +4,8 @@ Wants   = owasysd-pmsrv-ready.service
 After   = owasysd-pmsrv-ready.service
 
 [Service]
-ExecStart=/usr/bin/system_maintenance.sh
+ExecStart   =   /usr/bin/system_maintenance.sh
 
 [Install]
-WantedBy=multi-user.target
-Alias=owasysd-system-maintenance.service
+Alias       =   owasysd-system-maintenance.service
+WantedBy    =   owasysd-boot-check.Service

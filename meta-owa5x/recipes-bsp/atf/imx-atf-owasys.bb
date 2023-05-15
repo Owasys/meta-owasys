@@ -9,10 +9,10 @@ PV .= "+git${SRCPV}"
 
 ATF_SRC ?= "git://github.com/nxp-imx/imx-atf.git;protocol=https"
 SRC_URI = "${ATF_SRC};branch=${SRCBRANCH} \
-           file://0001-Change-in-the-selected-Uart.-Originally-ATF-Uart-was.patch \
+           file://0001-change-boot-UART-base-address-for-owa5X.patch \
 "
-SRCBRANCH = "imx_5.4.70_2.3.0"
-SRCREV = "2a26786460edd4f0ec3111e7027c93c57fc572c1"
+SRCBRANCH = "lf_v2.6"
+SRCREV = "c6a19b1a351308cc73443283f6aa56b2eff791b8"
 
 S = "${WORKDIR}/git"
 

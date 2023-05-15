@@ -2,7 +2,8 @@ DESCRIPTION = " This service can be used to wait for the pmsrv service in charge
                 to be ready in the system, \
                 which is detected with the existence of owaapi.lck. "
 SECTION = "Binaries"
-LICENSE = "CLOSED"
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM ="file://${COMPANY_CUSTOM_LICENSES}/OWASYS_Propietary_SW_License_Agreement.md;md5=203a753c44e11367199c31c2168fa959"
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 inherit systemd

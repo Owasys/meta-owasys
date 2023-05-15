@@ -1,7 +1,8 @@
 DESCRIPTION = "Shared libraries needed to control GPS, GSM, etc"
 SECTION = "Binaries"
 DEPENDS = " alsa-lib"
-LICENSE = "CLOSED"
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM ="file://${COMPANY_CUSTOM_LICENSES}/OWASYS_Propietary_SW_License_Agreement.md;md5=203a753c44e11367199c31c2168fa959"
 FILESEXTRAPATHS:prepend := "${THISDIR}/src:"
 COMPATIBLE_MACHINE = "(owa5x)"
 
@@ -10,7 +11,7 @@ SRC_URI = " file://libFMS_Module.so.1.1.4 \
             file://libGSM_Module.so.1.0.19 \
             file://libINET_Module.so.1.0.5 \
             file://libIOs_Module.so.1.0.16 \
-            file://libRTU_Module.so.1.0.18 \
+            file://libRTU_Module.so.1.0.20 \
             file://FMS_Defs.h \
             file://GPS2_ModuleDefs.h \
             file://GSM_ModuleDefs.h \
@@ -43,7 +44,7 @@ do_install() {
     install ${WORKDIR}/libGSM_Module.so.1.0.19 ${D}${libdir}/owasys
     install ${WORKDIR}/libINET_Module.so.1.0.5 ${D}${libdir}/owasys
     install ${WORKDIR}/libIOs_Module.so.1.0.16 ${D}${libdir}/owasys
-    install ${WORKDIR}/libRTU_Module.so.1.0.18 ${D}${libdir}/owasys
+    install ${WORKDIR}/libRTU_Module.so.1.0.20 ${D}${libdir}/owasys
 
     # create symbolic links from /usr/lib/owasys to /lib/
 
@@ -53,7 +54,7 @@ do_install() {
     ln -s -r ${D}/${libdir}/owasys/libGSM_Module.so.1.0.19    ${D}${nonarch_base_libdir}/libGSM_Module.so
     ln -s -r ${D}/${libdir}/owasys/libINET_Module.so.1.0.5    ${D}${nonarch_base_libdir}/libINET_Module.so
     ln -s -r ${D}/${libdir}/owasys/libIOs_Module.so.1.0.16    ${D}${nonarch_base_libdir}/libIOs_Module.so
-    ln -s -r ${D}/${libdir}/owasys/libRTU_Module.so.1.0.18    ${D}${nonarch_base_libdir}/libRTU_Module.so
+    ln -s -r ${D}/${libdir}/owasys/libRTU_Module.so.1.0.20    ${D}${nonarch_base_libdir}/libRTU_Module.so
 
 #****************************** HEADERS SECTION**************************************
 # This is added so headers are integrated into the SDK 

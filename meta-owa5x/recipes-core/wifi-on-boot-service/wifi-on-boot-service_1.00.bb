@@ -1,5 +1,6 @@
 DESCRIPTION = "Systemd services used for powering up Wifi/BLE module on boot using Owasys tools."
-LICENSE = "CLOSED"
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM ="file://${COMPANY_CUSTOM_LICENSES}/OWASYS_Propietary_SW_License_Agreement.md;md5=203a753c44e11367199c31c2168fa959"
 inherit systemd
 
 RDEPENDS:${PN} += "bash"
