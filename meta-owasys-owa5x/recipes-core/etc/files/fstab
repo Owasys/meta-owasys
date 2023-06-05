@@ -1,0 +1,3 @@
+# UNCONFIGURED FSTAB FOR BASE SYSTEM
+# <device>        <dir>           <type>        <options>        <dump> <fsck>"
+ubi0:device       /device         ubifs         defaults         0      0

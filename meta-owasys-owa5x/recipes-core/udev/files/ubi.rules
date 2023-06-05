@@ -1,0 +1,12 @@
+# Use the MTD device number instead of the UBI device number
+# System boots from file-systemA
+SUBSYSTEM=="ubi", KERNEL=="ubi0_0", ATTRS{mtd_num}=="4", SYMLINK+="ubi_file_systemA"
+SUBSYSTEM=="ubi", KERNEL=="ubi0_1", ATTRS{mtd_num}=="4", SYMLINK+="ubi_deviceA"
+SUBSYSTEM=="ubi", KERNEL=="ubi1_0", ATTRS{mtd_num}=="5", SYMLINK+="ubi_file_systemB"
+SUBSYSTEM=="ubi", KERNEL=="ubi1_1", ATTRS{mtd_num}=="5", SYMLINK+="ubi_deviceB"
+
+# System boots from file-systemB
+SUBSYSTEM=="ubi", KERNEL=="ubi0_0", ATTRS{mtd_num}=="5", SYMLINK+="ubi_file_systemB"
+SUBSYSTEM=="ubi", KERNEL=="ubi0_1", ATTRS{mtd_num}=="5", SYMLINK+="ubi_deviceB"
+SUBSYSTEM=="ubi", KERNEL=="ubi1_0", ATTRS{mtd_num}=="4", SYMLINK+="ubi_file_systemA"
+SUBSYSTEM=="ubi", KERNEL=="ubi1_1", ATTRS{mtd_num}=="4", SYMLINK+="ubi_deviceA"

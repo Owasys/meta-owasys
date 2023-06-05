@@ -1,0 +1,212 @@
+{
+    "name": "odm-edge",
+    "log_file": "/var/log/odm-edge.log",
+    "redis": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "unix_socket_path": "/tmp/redis.sock",
+        "attributes_queue": "tb-out",
+        "telemetry_queue": "tb-telemetry"
+    },
+    "custom_attributes": {
+        "sw": {
+            "enabled": true,
+            "odm_key": "swPackage",
+            "scan": 3600,
+            "comment": "Reports /etc/package.json every startup and on change"
+        },
+        "fw": {
+            "enabled": true,
+            "odm_key": "fw",
+            "scan": 3600,
+            "comment": "Reports the fw version every startup and on change"
+        },
+        "kernel": {
+            "enabled": true,
+            "odm_key": "kernel",
+            "scan": 3600,
+            "comment": "Reports the kernel version every startup and on change"
+        },
+        "country": {
+            "enabled": true,
+            "odm_key": "country",
+            "scan": 3600,
+            "comment": "Reports the country based on pollux-net PLMN every startup and on change"
+        },
+        "owasys_libs": {
+            "enabled": true,
+            "odm_key": "owasysLibs",
+            "scan": 3600,
+            "comment": "Reports the owasys libraries every startup and on change"
+        },
+        "apn": {
+            "enabled": true,
+            "odm_key": "apn",
+            "scan": 3600,
+            "comment": "Reports the APN every startup and on change"
+        },
+        "hw": {
+            "enabled": true,
+            "odm_key": "hw",
+            "scan": 3600,
+            "comment": "Reports the hw.json every startup and on change"
+        }
+    },
+    "odm": {
+        "gps": {
+            "enabled": true,
+            "shm_key": [
+                10001,
+                10004
+            ],
+            "shm_scan": 2,
+            "odm_key": "position",
+            "odm_attribute": false,
+            "odm_telemetry": true,
+            "report_mode": "on-change",
+            "selected_vars": [
+                "sendPosition"
+            ],
+            "send_vars": "all"
+        },
+        "battery": {
+            "enabled": true,
+            "shm_key": [
+                10000
+            ],
+            "shm_scan": 2,
+            "odm_key": "batInfo",
+            "odm_attribute": false,
+            "odm_telemetry": true,
+            "report_mode": "on-change",
+            "delta": 0.3,
+            "selected_vars": [
+                "batPerc",
+                "batStat"
+            ],
+            "send_vars": [
+                "batPerc",
+                "batStat",
+                "batVolt"
+            ]
+        },
+        "dc": {
+            "enabled": true,
+            "shm_key": [
+                10000
+            ],
+            "shm_scan": 2,
+            "odm_key": "dcInfo",
+            "odm_attribute": false,
+            "odm_telemetry": true,
+            "report_mode": "on-change",
+            "delta": 1.0,
+            "selected_vars": [
+                "dcVolt"
+            ],
+            "send_vars": [
+                {
+                    "powfail0": "powerfail"
+                },
+                "dcVolt"
+            ]
+        },
+        "signal strength": {
+            "enabled": true,
+            "shm_key": [
+                10002
+            ],
+            "shm_scan": 2,
+            "odm_attribute": false,
+            "odm_telemetry": true,
+            "report_mode": "on-change",
+            "delta": 6.0,
+            "selected_vars": [
+                "gsm.dbm"
+            ],
+            "send_vars": [
+                {
+                    "gsm.dbm": "signalStrength"
+                }
+            ]
+        },
+        "sim info": {
+            "enabled": true,
+            "shm_key": [
+                10002
+            ],
+            "shm_scan": 2,
+            "odm_key": "simInfo",
+            "odm_attribute": true,
+            "odm_telemetry": false,
+            "report_mode": "on-change",
+            "selected_vars": [
+                "gsm.imei",
+                "gsm.imsi",
+                "gsm.iccid",
+                "gsm.cell0.plmn",
+                "gprs.registered"
+            ],
+            "send_vars": [
+                {
+                    "gsm.imei": "imei"
+                },
+                {
+                    "gsm.imsi": "imsi"
+                },
+                {
+                    "gsm.iccid": "iccid"
+                },
+                {
+                    "gsm.cell0.plmn": "plmn"
+                },
+                {
+                    "gprs.registered": "gsmRegistration"
+                }
+            ]
+        }
+    },
+    "net_ifaces": {                                                                              
+        "ppp0_bytes_sent": {                                                                     
+            "enabled": true,                                                                     
+            "disaggregated": true,                                                               
+            "interfaces": ["ppp0"],                                                              
+            "scan": 60,                                                                          
+            "send_time": 86400,                                                                    
+            "odm_attribute": false,                                                              
+            "odm_telemetry": true,                                                               
+            "send_vars": [{"bytes_sent": "ppp0_bytes_sent"}]                                     
+        },                                                                                       
+        "ppp0_bytes_recv": {                                                                     
+            "enabled": true,                                                                     
+            "disaggregated": true,                                                               
+            "interfaces": ["ppp0"],                                                              
+            "scan": 60,                                                                          
+            "send_time": 86400,                                                                    
+            "odm_attribute": false,                                                              
+            "odm_telemetry": true,                                                               
+            "send_vars": [{"bytes_recv": "ppp0_bytes_recv"}]                                     
+        },                                                                       
+        "allBytes": {                                                            
+            "enabled": false,                                                    
+            "disaggregated": false,                                              
+            "scan": 60,                                                          
+            "send_time": 86400,                                                  
+            "odm_key": "allBytes",                                  
+            "odm_attribute": true,                                  
+            "odm_telemetry": false,                                 
+            "send_vars":["bytes_sent", "bytes_recv"]                
+        },                                                          
+        "allInterfaces": {                                          
+            "enabled": false,                               
+            "disaggregated": true,                          
+            "interfaces": "all",                            
+            "scan": 20,                                     
+            "send_time": 3600,                                
+            "odm_key": "interfaces_counters",               
+            "odm_attribute": false,                         
+            "odm_telemetry": true,                          
+            "send_vars": "all"                              
+        }                                                   
+    }
+}

@@ -1,0 +1,14 @@
+[Unit]
+Description     = Display and log unit boot reason. 
+After           = pmsrv.service
+Requires	    = multi-user.target
+After		    = syslog.target pmsrv.service checklock.service
+
+[Service]
+ExecStart       = /usr/bin/wakeup-reason | /usr/bin/tee /tmp/wakeup-reason.txt
+Type            = oneshot
+StandardOutput  = syslog+console
+StandardError   = syslog+console
+
+[Install]
+WantedBy        = multi-user.target

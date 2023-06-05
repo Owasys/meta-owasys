@@ -1,0 +1,102 @@
+From 9a3099a40e7d560258baaf6a54b6c0fdc05e23ed Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Thu, 9 Mar 2023 15:54:45 +0100
+Subject: [PATCH] <owa5x_config.OWA> sdma driver
+
+The next bug was detected when a reboot was performed:
+
+imx-sdma 30e10000.dma-controller: loading /lib/firmware/5.10.72-1.0.7.1+/imx/sdma/sdma-imx7d.bin failed with error -16
+ubi0 warning: ubi_io_read: error -16 while reading 65 bytes from PEB 878:104984, read only 0 bytes, retry
+
+It turns out that imx sdma driver must be compiled as a kernel module instead a built-in one, this way kernel won't be
+trying to access imx/sdma/sdma-imx7d.bin after the FS has been unmounted.
+
+Changelog: fixed
+Signed-off-by: Alvaro Guzman <alvaro.guzman@owasys.com>
+---
+ owa5x_config.OWA | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/owa5x_config.OWA b/owa5x_config.OWA
+index 915b8d7de456..4214f2847db3 100644
+--- a/owa5x_config.OWA
++++ b/owa5x_config.OWA
+@@ -2,13 +2,14 @@
+ # Automatically generated file; DO NOT EDIT.
+ # Linux/arm64 5.10.72 Kernel Configuration
+ #
+-CONFIG_CC_VERSION_TEXT="aarch64-fslc-linux-gcc (GCC) 9.2.0"
++CONFIG_CC_VERSION_TEXT="aarch64-fslc-linux-gcc (GCC) 11.2.0"
+ CONFIG_CC_IS_GCC=y
+-CONFIG_GCC_VERSION=90200
+-CONFIG_LD_VERSION=232000000
++CONFIG_GCC_VERSION=110200
++CONFIG_LD_VERSION=202441130000
+ CONFIG_CLANG_VERSION=0
+ CONFIG_LLD_VERSION=0
+ CONFIG_CC_HAS_ASM_GOTO=y
++CONFIG_CC_HAS_ASM_GOTO_OUTPUT=y
+ CONFIG_CC_HAS_ASM_INLINE=y
+ CONFIG_IRQ_WORK=y
+ CONFIG_BUILDTIME_TABLE_SORT=y
+@@ -444,9 +445,11 @@ CONFIG_ARM64_CNP=y
+ #
+ # ARMv8.3 architectural features
+ #
++CONFIG_ARM64_PTR_AUTH=y
+ CONFIG_CC_HAS_BRANCH_PROT_PAC_RET=y
+ CONFIG_CC_HAS_SIGN_RETURN_ADDRESS=y
+ CONFIG_AS_HAS_PAC=y
++CONFIG_AS_HAS_CFI_NEGATE_RA_STATE=y
+ # end of ARMv8.3 architectural features
+ 
+ #
+@@ -461,9 +464,12 @@ CONFIG_ARM64_TLB_RANGE=y
+ # ARMv8.5 architectural features
+ #
+ CONFIG_ARM64_BTI=y
++CONFIG_ARM64_BTI_KERNEL=y
+ CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI=y
+ CONFIG_ARM64_E0PD=y
+ CONFIG_ARCH_RANDOM=y
++CONFIG_ARM64_AS_HAS_MTE=y
++CONFIG_ARM64_MTE=y
+ # end of ARMv8.5 architectural features
+ 
+ CONFIG_ARM64_SVE=y
+@@ -922,6 +928,7 @@ CONFIG_GENERIC_EARLY_IOREMAP=y
+ # CONFIG_IDLE_PAGE_TRACKING is not set
+ CONFIG_ARCH_HAS_PTE_DEVMAP=y
+ CONFIG_FRAME_VECTOR=y
++CONFIG_ARCH_USES_HIGH_VMA_FLAGS=y
+ # CONFIG_PERCPU_STATS is not set
+ # CONFIG_GUP_BENCHMARK is not set
+ # CONFIG_READ_ONLY_THP_FOR_FS is not set
+@@ -6136,7 +6143,7 @@ CONFIG_FSL_QDMA=m
+ CONFIG_FSL_EDMA_V3=y
+ # CONFIG_HISI_DMA is not set
+ # CONFIG_IMX_DMA is not set
+-CONFIG_IMX_SDMA=y
++CONFIG_IMX_SDMA=m
+ # CONFIG_INTEL_IDMA64 is not set
+ CONFIG_MV_XOR_V2=y
+ CONFIG_MXS_DMA=y
+@@ -8094,6 +8101,7 @@ CONFIG_HAVE_ARCH_KGDB=y
+ # CONFIG_KGDB is not set
+ CONFIG_ARCH_HAS_UBSAN_SANITIZE_ALL=y
+ # CONFIG_UBSAN is not set
++CONFIG_HAVE_KCSAN_COMPILER=y
+ # end of Generic Kernel Debugging Instruments
+ 
+ CONFIG_DEBUG_KERNEL=y
+@@ -8128,6 +8136,7 @@ CONFIG_DEBUG_MEMORY_INIT=y
+ CONFIG_HAVE_ARCH_KASAN=y
+ CONFIG_HAVE_ARCH_KASAN_SW_TAGS=y
+ CONFIG_CC_HAS_KASAN_GENERIC=y
++CONFIG_CC_HAS_KASAN_SW_TAGS=y
+ CONFIG_CC_HAS_WORKING_NOSANITIZE_ADDRESS=y
+ # CONFIG_KASAN is not set
+ # end of Memory Debugging
+-- 
+2.25.1
+

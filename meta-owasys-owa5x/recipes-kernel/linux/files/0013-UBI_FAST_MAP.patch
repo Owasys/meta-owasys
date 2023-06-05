@@ -1,0 +1,26 @@
+diff --git a/.config b/.config
+index f23f3e50bd0e..f063a55eb296 100644
+--- a/.config
++++ b/.config
+@@ -1898,7 +1898,7 @@ CONFIG_MTD_SPI_NOR=y
+ CONFIG_MTD_UBI=y
+ CONFIG_MTD_UBI_WL_THRESHOLD=4096
+ CONFIG_MTD_UBI_BEB_LIMIT=20
+-# CONFIG_MTD_UBI_FASTMAP is not set
++CONFIG_MTD_UBI_FASTMAP=y
+ # CONFIG_MTD_UBI_GLUEBI is not set
+ # CONFIG_MTD_UBI_BLOCK is not set
+ # CONFIG_MTD_HYPERBUS is not set
+diff --git a/owa5x_config.OWA b/owa5x_config.OWA
+index 4bc990cf1308..89247d849d6e 100644
+--- a/owa5x_config.OWA
++++ b/owa5x_config.OWA
+@@ -1898,7 +1898,7 @@ CONFIG_MTD_SPI_NOR=y
+ CONFIG_MTD_UBI=y
+ CONFIG_MTD_UBI_WL_THRESHOLD=4096
+ CONFIG_MTD_UBI_BEB_LIMIT=20
+-# CONFIG_MTD_UBI_FASTMAP is not set
++CONFIG_MTD_UBI_FASTMAP=y
+ # CONFIG_MTD_UBI_GLUEBI is not set
+ # CONFIG_MTD_UBI_BLOCK is not set
+ # CONFIG_MTD_HYPERBUS is not set

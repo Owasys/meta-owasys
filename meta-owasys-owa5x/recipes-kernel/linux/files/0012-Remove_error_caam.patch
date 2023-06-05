@@ -1,0 +1,25 @@
+diff --git a/.config b/.config
+index 4bc990cf1308..f23f3e50bd0e 100644
+--- a/.config
++++ b/.config
+@@ -2,7 +2,7 @@
+ # Automatically generated file; DO NOT EDIT.
+ # Linux/arm64 5.10.72 Kernel Configuration
+ #
+-CONFIG_CC_VERSION_TEXT="aarch64-poky-linux-gcc (GCC) 11.2.0"
++CONFIG_CC_VERSION_TEXT="aarch64-fslc-linux-gcc (GCC) 11.2.0"
+ CONFIG_CC_IS_GCC=y
+ CONFIG_GCC_VERSION=110200
+ CONFIG_LD_VERSION=202441130000
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index 84b4abe180a3..e104d455a4f1 100755
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -1003,6 +1003,7 @@ sec_jr0: jr@1000 {
+ 					compatible = "fsl,sec-v4.0-job-ring";
+ 					reg = <0x1000 0x1000>;
+ 					interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++					status = "disabled";
+ 				};
+ 
+ 				sec_jr1: jr@2000 {

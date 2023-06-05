@@ -1,0 +1,137 @@
+From 8fb42602f7c54ffaa3825b127f2dc3e5d10101ef Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Wed, 1 Mar 2023 16:16:48 +0100
+Subject: [PATCH] <owa5x_config.OWA> BPF for docker installation.
+
+Added BPF configs according to commit 55211387410c3bc90574b573c2e63db2948a62a9 on linux-imx.
+
+Changelog: added.
+Signed-off-by: Alvaro Guzman <alvaro.guzman@owasys.com>
+---
+ owa5x_config.OWA | 58 +++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 55 insertions(+), 3 deletions(-)
+
+diff --git a/owa5x_config.OWA b/owa5x_config.OWA
+index 7097dceef..9c6892860 100644
+--- a/owa5x_config.OWA
++++ b/owa5x_config.OWA
+@@ -111,6 +111,7 @@ CONFIG_SRCU=y
+ CONFIG_TREE_SRCU=y
+ CONFIG_TASKS_RCU_GENERIC=y
+ CONFIG_TASKS_RCU=y
++CONFIG_TASKS_TRACE_RCU=y
+ CONFIG_RCU_STALL_COMMON=y
+ CONFIG_RCU_NEED_SEGCBLIST=y
+ # end of RCU Subsystem
+@@ -154,7 +155,9 @@ CONFIG_PROC_PID_CPUSET=y
+ CONFIG_CGROUP_DEVICE=y
+ CONFIG_CGROUP_CPUACCT=y
+ CONFIG_CGROUP_PERF=y
++CONFIG_CGROUP_BPF=y
+ # CONFIG_CGROUP_DEBUG is not set
++CONFIG_SOCK_CGROUP_DATA=y
+ CONFIG_NAMESPACES=y
+ CONFIG_UTS_NS=y
+ CONFIG_TIME_NS=y
+@@ -209,9 +212,11 @@ CONFIG_MEMBARRIER=y
+ CONFIG_KALLSYMS=y
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_KALLSYMS_BASE_RELATIVE=y
+-# CONFIG_BPF_SYSCALL is not set
++CONFIG_BPF_SYSCALL=y
+ CONFIG_ARCH_WANT_DEFAULT_BPF_JIT=y
++CONFIG_BPF_JIT_ALWAYS_ON=y
+ CONFIG_BPF_JIT_DEFAULT_ON=y
++# CONFIG_BPF_PRELOAD is not set
+ # CONFIG_USERFAULTFD is not set
+ CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE=y
+ CONFIG_KCMP=y
+@@ -938,6 +943,7 @@ CONFIG_UNIX_SCM=y
+ # CONFIG_TLS is not set
+ # CONFIG_XFRM_USER is not set
+ # CONFIG_NET_KEY is not set
++# CONFIG_XDP_SOCKETS is not set
+ CONFIG_INET=y
+ CONFIG_IP_MULTICAST=y
+ # CONFIG_IP_ADVANCED_ROUTER is not set
+@@ -1068,7 +1074,7 @@ CONFIG_NETFILTER_XT_TARGET_MASQUERADE=m
+ # Xtables matches
+ #
+ CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=m
+-# CONFIG_NETFILTER_XT_MATCH_BPF is not set
++CONFIG_NETFILTER_XT_MATCH_BPF=m
+ # CONFIG_NETFILTER_XT_MATCH_CGROUP is not set
+ # CONFIG_NETFILTER_XT_MATCH_CLUSTER is not set
+ # CONFIG_NETFILTER_XT_MATCH_COMMENT is not set
+@@ -1088,6 +1094,7 @@ CONFIG_NETFILTER_XT_MATCH_CONNTRACK=m
+ # CONFIG_NETFILTER_XT_MATCH_HL is not set
+ # CONFIG_NETFILTER_XT_MATCH_IPCOMP is not set
+ # CONFIG_NETFILTER_XT_MATCH_IPRANGE is not set
++CONFIG_NETFILTER_XT_MATCH_IPVS=m
+ # CONFIG_NETFILTER_XT_MATCH_L2TP is not set
+ # CONFIG_NETFILTER_XT_MATCH_LENGTH is not set
+ # CONFIG_NETFILTER_XT_MATCH_LIMIT is not set
+@@ -1113,7 +1120,51 @@ CONFIG_NETFILTER_XT_MATCH_CONNTRACK=m
+ # end of Core Netfilter Configuration
+ 
+ # CONFIG_IP_SET is not set
+-# CONFIG_IP_VS is not set
++CONFIG_IP_VS=m
++# CONFIG_IP_VS_IPV6 is not set
++# CONFIG_IP_VS_DEBUG is not set
++CONFIG_IP_VS_TAB_BITS=12
++
++#
++# IPVS transport protocol load balancing support
++#
++# CONFIG_IP_VS_PROTO_TCP is not set
++# CONFIG_IP_VS_PROTO_UDP is not set
++# CONFIG_IP_VS_PROTO_ESP is not set
++# CONFIG_IP_VS_PROTO_AH is not set
++# CONFIG_IP_VS_PROTO_SCTP is not set
++
++#
++# IPVS scheduler
++#
++# CONFIG_IP_VS_RR is not set
++# CONFIG_IP_VS_WRR is not set
++# CONFIG_IP_VS_LC is not set
++# CONFIG_IP_VS_WLC is not set
++# CONFIG_IP_VS_FO is not set
++# CONFIG_IP_VS_OVF is not set
++# CONFIG_IP_VS_LBLC is not set
++# CONFIG_IP_VS_LBLCR is not set
++# CONFIG_IP_VS_DH is not set
++# CONFIG_IP_VS_SH is not set
++# CONFIG_IP_VS_MH is not set
++# CONFIG_IP_VS_SED is not set
++# CONFIG_IP_VS_NQ is not set
++
++#
++# IPVS SH scheduler
++#
++CONFIG_IP_VS_SH_TAB_BITS=8
++
++#
++# IPVS MH scheduler
++#
++CONFIG_IP_VS_MH_TAB_INDEX=12
++
++#
++# IPVS application helper
++#
++# CONFIG_IP_VS_NFCT is not set
+ 
+ #
+ # IP: Netfilter Configuration
+@@ -1321,6 +1372,7 @@ CONFIG_XPS=y
+ CONFIG_NET_RX_BUSY_POLL=y
+ CONFIG_BQL=y
+ CONFIG_BPF_JIT=y
++# CONFIG_BPF_STREAM_PARSER is not set
+ CONFIG_NET_FLOW_LIMIT=y
+ 
+ #
+-- 
+2.25.1
+

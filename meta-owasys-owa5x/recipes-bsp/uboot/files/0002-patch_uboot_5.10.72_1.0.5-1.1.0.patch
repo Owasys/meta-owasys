@@ -1,0 +1,912 @@
+diff --git a/.gitignore b/.gitignore
+index 08f8276602..822aa0a111 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -55,6 +55,7 @@ fit-dtb.blob*
+ !lpddr4_pmu_train_1d_imem.bin
+ !lpddr4_pmu_train_2d_dmem.bin
+ !lpddr4_pmu_train_2d_imem.bin
++!.gitlab
+ 
+ #
+ # Generated files
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index 4abe09931d..5f4ac5dd6c 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -1,13 +1,11 @@
+-image: 192.168.100.7:5000/owasys_gcc_10_2_owa5x:latest
++compile:
++  trigger:
++    include: .gitlab/compile.yml
++    strategy: depend
+ 
+-Compilation: 
+-  script:
+-    - ./ucompilation.sh
+-  
+-  artifacts:
+-      paths:
+-        - Install/u-boot-spl.bin
+-        - Install/u-boot-nodtb.bin
+-        - Install/imx8mp-owa5x.dtb
+-
+-      expire_in: 1 week
++generate_diff:
++  only:
++    - tags
++  trigger:
++    include: .gitlab/generate_diff.yml
++    strategy: depend
+diff --git a/.gitlab/compile.yml b/.gitlab/compile.yml
+new file mode 100644
+index 0000000000..637567bb45
+--- /dev/null
++++ b/.gitlab/compile.yml
+@@ -0,0 +1,14 @@
++image: 192.168.100.7:5000/owasys_gcc_11_2_owa5x:latest
++
++Compilation: 
++  script:
++    - ./ucompilation.sh
++  
++  artifacts:
++      paths:
++        - Install/u-boot-spl.bin
++        - Install/u-boot-nodtb.bin
++        - Install/imx8mp-owa5x.dtb
++      
++      expire_in: 1 week
++
+diff --git a/.gitlab/generate_diff.yml b/.gitlab/generate_diff.yml
+new file mode 100644
+index 0000000000..5e59fed7bc
+--- /dev/null
++++ b/.gitlab/generate_diff.yml
+@@ -0,0 +1,26 @@
++image: alpine:3.16.2
++
++before_script:
++  - apk update
++  - apk add git
++  - apk add --update make
++  - apk add --update rsync
++
++build:
++    script:
++        # - export | grep "^CI_" # Uncomment to print Gitlab CI variables
++        - make clean
++        - make distclean
++        - git clone --depth 1 --branch rel_imx_5.10.72_2.2.2 https://source.codeaurora.org/external/imx/uboot-imx /tmp/uboot-imx
++        - cd /tmp/uboot-imx
++        - git checkout -b 5.10.72_2.2.2
++        - pwd
++        - rsync -axvHAX --exclude='.git/' --info=progress2 --delete ${CI_PROJECT_DIR}/ ./
++        - rm readme.txt || true
++        - rm -r .gitlab || true
++        - sed -i "2a\\source /opt/crosstool/fsl-imx-xwayland/5.4-zeus/environment-setup-aarch64-poky-linux" ucompilation.sh
++        - git add .
++        - git diff --staged -G. --text > ${CI_PROJECT_DIR}/${CI_COMMIT_TAG}.patch
++    artifacts:
++      paths:
++        - ${CI_COMMIT_TAG}.patch
+diff --git a/arch/arm/dts/imx8mp-owa5x.dts b/arch/arm/dts/imx8mp-owa5x.dts
+index 05058097be..f4bcc7cec0 100644
+--- a/arch/arm/dts/imx8mp-owa5x.dts
++++ b/arch/arm/dts/imx8mp-owa5x.dts
+@@ -20,9 +20,9 @@
+ 
+ 	memory@40000000 { /* OWA5X */
+ 		device_type = "memory";
+-		reg = <0x0 0x40000000 0 0x80000000>; /* 2 GByte */
+-/*      reg = <0x0 0x40000000 0 0x80000000>,
+-            <0x1 0xC0000000 0 0x80000000>;*/ /* 4 GByte */
++/*		reg = <0x0 0x40000000 0 0x80000000>; *//* 2 GByte */
++      reg = <0x0 0x40000000 0 0x80000000>,
++            <0x1 0xC0000000 0 0x80000000>; /* 4 GByte */
+ 	};
+ 
+ 	mcu_rdc { /* Resource Domain Controller*/
+@@ -272,6 +272,10 @@
+ 	status = "okay";
+ };
+ 
++&usb3_1 {
++	status = "okay";
++};
++
+ &usb3_phy1 { /* OWA5X */
+ 	status = "okay";
+ };
+@@ -340,6 +344,13 @@
+ 
+ &iomuxc {
+ 	pinctrl-names = "default";
++	pinctrl-0 = <&gpio_keys_def>;
++
++	gpio_keys_def: keys_def_grp {
++		fsl,pins = <
++         MX8MP_IOMUXC_SAI1_TXD2__GPIO4_IO14         0x00000144       /* ETH_REG_ON */
++		>;
++	};
+ 
+ 	pinctrl_fec: fecgrp { /* OWA5X */
+ 		fsl,pins = <
+diff --git a/arch/arm/dts/imx8mp.dtsi b/arch/arm/dts/imx8mp.dtsi
+index 8206501869..da8fe55c6e 100644
+--- a/arch/arm/dts/imx8mp.dtsi
++++ b/arch/arm/dts/imx8mp.dtsi
+@@ -1219,7 +1219,7 @@
+ 			status = "disabled";
+ 
+ 			usb_dwc3_1: dwc3@38200000 {
+-				compatible = "snps,dwc3";
++				compatible = "fsl,imx8mq-dwc3", "snps,dwc3";
+ 				reg = <0x38200000 0x10000>;
+ 				clocks = <&clk IMX8MP_CLK_HSIO_AXI>,
+ 					 <&clk IMX8MP_CLK_USB_CORE_REF>,
+diff --git a/arch/arm/include/asm/arch-imx8m/ddr.h b/arch/arm/include/asm/arch-imx8m/ddr.h
+index 0f1e832c03..54ab8f82fa 100644
+--- a/arch/arm/include/asm/arch-imx8m/ddr.h
++++ b/arch/arm/include/asm/arch-imx8m/ddr.h
+@@ -703,6 +703,11 @@ struct dram_timing_info {
+ };
+ 
+ extern struct dram_timing_info dram_timing;
++extern struct dram_cfg_param ddr_ddrc_cfg[];
++extern struct dram_cfg_param ddr_fsp0_cfg[];
++extern struct dram_cfg_param ddr_fsp1_cfg[];
++extern struct dram_cfg_param ddr_fsp2_cfg[];
++extern struct dram_cfg_param ddr_fsp0_2d_cfg[];
+ 
+ void ddr_load_train_firmware(enum fw_type type);
+ int ddr_init(struct dram_timing_info *timing_info);
+@@ -746,5 +751,6 @@ static inline void reg32setbit(unsigned long addr, u32 bit)
+ 
+ extern struct dram_cfg_param ddrphy_trained_csr[];
+ extern uint32_t ddrphy_trained_csr_num;
++extern phys_size_t phys_sdram_2_size;
+ 
+ #endif
+diff --git a/arch/arm/mach-imx/imx8m/soc.c b/arch/arm/mach-imx/imx8m/soc.c
+index d87db279b9..1ac2cb1b27 100644
+--- a/arch/arm/mach-imx/imx8m/soc.c
++++ b/arch/arm/mach-imx/imx8m/soc.c
+@@ -158,8 +158,8 @@ static struct mm_region imx8m_mem_map[] = {
+ #ifdef PHYS_SDRAM_2_SIZE
+ 	}, {
+ 		/* DRAM2 */
+-		.virt = 0x100000000UL,
+-		.phys = 0x100000000UL,
++		.virt = 0xC0000000UL,
++		.phys = 0xC0000000UL,
+ 		.size = PHYS_SDRAM_2_SIZE,
+ 		.attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
+ #ifdef CONFIG_IMX_TRUSTY_OS
+@@ -203,7 +203,16 @@ void enable_caches(void)
+ 	 */
+ 	int entry = imx8m_find_dram_entry_in_mem_map();
+ 	u64 attrs = imx8m_mem_map[entry].attrs;
+-
++#ifdef PHYS_SDRAM_2_SIZE
++      if( gd->phys_ram_2_size > 0x00) {
++         imx8m_mem_map[6].size = gd->phys_ram_2_size;
++      } else {
++         imx8m_mem_map[6].virt = 0x00UL;
++         imx8m_mem_map[6].phys = 0x00UL;
++         imx8m_mem_map[6].size = 0x00UL;
++         imx8m_mem_map[6].attrs = 0x00UL;
++      }
++#endif
+ 	while (i < CONFIG_NR_DRAM_BANKS &&
+ 	       entry < ARRAY_SIZE(imx8m_mem_map)) {
+ 		if (gd->bd->bi_dram[i].start == 0)
+@@ -229,7 +238,8 @@ __weak int board_phys_sdram_size(phys_size_t *size)
+ 	*size = PHYS_SDRAM_SIZE;
+ 
+ #ifdef PHYS_SDRAM_2_SIZE
+-	*size += PHYS_SDRAM_2_SIZE;
++//	*size += PHYS_SDRAM_2_SIZE;
++	*size += gd->phys_ram_2_size;
+ #endif
+ 	return 0;
+ }
+@@ -264,9 +274,9 @@ int dram_init_banksize(void)
+ 		return ret;
+ 
+ 	/* Bank 1 can't cross over 4GB space */
+-	if (sdram_size > 0xc0000000) {
+-		sdram_b1_size = 0xc0000000;
+-		sdram_b2_size = sdram_size - 0xc0000000;
++	if (sdram_size > 0x80000000) {
++		sdram_b1_size = 0x80000000;
++		sdram_b2_size = sdram_size - 0x80000000;
+ 	} else {
+ 		sdram_b1_size = sdram_size;
+ 		sdram_b2_size = 0;
+@@ -297,8 +307,10 @@ int dram_init_banksize(void)
+ 			puts("CONFIG_NR_DRAM_BANKS is not enough for SDRAM_2\n");
+ 			return -1;
+ 		}
+-		gd->bd->bi_dram[bank].start = 0x100000000UL;
+-		gd->bd->bi_dram[bank].size = sdram_b2_size;
++//		gd->bd->bi_dram[bank].start = 0x100000000UL;
++//		gd->bd->bi_dram[bank].size = sdram_b2_size;
++      gd->bd->bi_dram[bank].start = PHYS_SDRAM_2;
++      gd->bd->bi_dram[bank].size = gd->phys_ram_2_size;
+ 	}
+ 
+ 	return 0;
+@@ -312,8 +324,8 @@ phys_size_t get_effective_memsize(void)
+ 	ret = board_phys_sdram_size(&sdram_size);
+ 	if (!ret) {
+ 		/* Bank 1 can't cross over 4GB space */
+-		if (sdram_size > 0xc0000000) {
+-			sdram_b1_size = 0xc0000000;
++		if (sdram_size > 0x80000000) {
++			sdram_b1_size = 0x80000000;
+ 		} else {
+ 			sdram_b1_size = sdram_size;
+ 		}
+diff --git a/board/freescale/imx8mp_owa5x/lpddr4_timing.c b/board/freescale/imx8mp_owa5x/lpddr4_timing.c
+index 22650b0e0a..880093712b 100644
+--- a/board/freescale/imx8mp_owa5x/lpddr4_timing.c
++++ b/board/freescale/imx8mp_owa5x/lpddr4_timing.c
+@@ -18,7 +18,7 @@ struct dram_cfg_param ddr_ddrc_cfg[] = {
+ 	/** Initialize DDRC registers **/
+ 	{ 0x3d400304, 0x1 },
+ 	{ 0x3d400030, 0x1 },
+-	{ 0x3d400000, 0xa1080020 },
++	{ 0x3d400000, 0xa3080020 }, /* Index 2, 2GB: 0xa1080020, 4GB: 0xa3080020 */
+ 	{ 0x3d400020, 0x1223 },
+ 	{ 0x3d400024, 0x16e3600 },
+ 	{ 0x3d400064, 0x5b00d2 },
+@@ -55,7 +55,7 @@ struct dram_cfg_param ddr_ddrc_cfg[] = {
+ 	{ 0x3d4001c4, 0x1 },
+ 	{ 0x3d4000f4, 0xc99 },
+ 	{ 0x3d400108, 0x70e1617 },
+-	{ 0x3d400200, 0x1f },
++	{ 0x3d400200, 0x17 }, /* Index 39, 2GB: 0x1f, 4GB: 0x17 */
+ 	{ 0x3d40020c, 0x0 },
+ 	{ 0x3d400210, 0x1f1f },
+ 	{ 0x3d400204, 0x80808 },
+@@ -1069,7 +1069,7 @@ struct dram_cfg_param ddr_fsp0_cfg[] = {
+ 	{ 0x54009, 0xc8 },
+ 	{ 0x5400b, 0x2 },
+ 	{ 0x5400f, 0x100 },
+-	{ 0x54012, 0x110 },
++	{ 0x54012, 0x310 }, /* Index 9, 2GB: 0x110, 4GB: 0x310 */
+ 	{ 0x54019, 0x2dd4 },
+ 	{ 0x5401a, 0x33 },
+ 	{ 0x5401b, 0x4866 },
+@@ -1081,7 +1081,7 @@ struct dram_cfg_param ddr_fsp0_cfg[] = {
+ 	{ 0x54022, 0x4800 },
+ 	{ 0x54024, 0x16 },
+ 	{ 0x5402b, 0x1000 },
+-	{ 0x5402c, 0x1 },
++	{ 0x5402c, 0x3 }, /* Index 21, 2GB: 0x1, 4GB: 0x3 */
+ 	{ 0x54032, 0xd400 },
+ 	{ 0x54033, 0x332d },
+ 	{ 0x54034, 0x6600 },
+@@ -1110,7 +1110,7 @@ struct dram_cfg_param ddr_fsp1_cfg[] = {
+ 	{ 0x54009, 0xc8 },
+ 	{ 0x5400b, 0x2 },
+ 	{ 0x5400f, 0x100 },
+-	{ 0x54012, 0x110 },
++	{ 0x54012, 0x310 }, /* Index 10, 2GB: 0x110, 4GB: 0x310 */
+ 	{ 0x54019, 0x84 },
+ 	{ 0x5401a, 0x33 },
+ 	{ 0x5401b, 0x4866 },
+@@ -1122,7 +1122,7 @@ struct dram_cfg_param ddr_fsp1_cfg[] = {
+ 	{ 0x54022, 0x4800 },
+ 	{ 0x54024, 0x16 },
+ 	{ 0x5402b, 0x1000 },
+-	{ 0x5402c, 0x1 },
++	{ 0x5402c, 0x3 }, /* Index 22, 2GB: 0x1, 4GB: 0x3 */
+ 	{ 0x54032, 0x8400 },
+ 	{ 0x54033, 0x3300 },
+ 	{ 0x54034, 0x6600 },
+@@ -1151,7 +1151,7 @@ struct dram_cfg_param ddr_fsp2_cfg[] = {
+ 	{ 0x54009, 0xc8 },
+ 	{ 0x5400b, 0x2 },
+ 	{ 0x5400f, 0x100 },
+-	{ 0x54012, 0x110 },
++	{ 0x54012, 0x310 }, /* Index 10, 2GB: 0x110, 4GB: 0x310 */
+ 	{ 0x54019, 0x84 },
+ 	{ 0x5401a, 0x33 },
+ 	{ 0x5401b, 0x4866 },
+@@ -1163,7 +1163,7 @@ struct dram_cfg_param ddr_fsp2_cfg[] = {
+ 	{ 0x54022, 0x4800 },
+ 	{ 0x54024, 0x16 },
+ 	{ 0x5402b, 0x1000 },
+-	{ 0x5402c, 0x1 },
++	{ 0x5402c, 0x3 }, /* Index 22, 2GB: 0x1, 4GB: 0x3 */
+ 	{ 0x54032, 0x8400 },
+ 	{ 0x54033, 0x3300 },
+ 	{ 0x54034, 0x6600 },
+diff --git a/common/board_f.c b/common/board_f.c
+index cef73b8a2e..606c9df847 100644
+--- a/common/board_f.c
++++ b/common/board_f.c
+@@ -301,6 +301,17 @@ static int setup_spl_uboot_offset(void)
+ 	return 0;
+ }
+ 
++static int setup_sdram_2_size(void)
++{
++	phys_size_t *pval;
++
++	pval = bloblist_ensure(BLOBLISTT_PHYS_SDRAM_2_SIZE, sizeof(phys_size_t));
++	if (!pval)
++		return -ENOENT;
++
++	gd->phys_ram_2_size = *pval;
++	return 0;
++}
+ 
+ __weak int arch_cpu_init(void)
+ {
+@@ -835,6 +846,7 @@ static const init_fnc_t init_sequence_f[] = {
+ 	bloblist_init,
+ #endif
+    setup_spl_uboot_offset,
++   setup_sdram_2_size,
+ 	setup_spl_handoff,
+ #if defined(CONFIG_CONSOLE_RECORD_INIT_F)
+ 	console_record_init,
+diff --git a/common/spl/spl.c b/common/spl/spl.c
+index 5f5a5b8673..2974d4a3ba 100644
+--- a/common/spl/spl.c
++++ b/common/spl/spl.c
+@@ -32,6 +32,7 @@
+ #include <fdt_support.h>
+ #include <bootcount.h>
+ #include <wdt.h>
++#include <asm/arch/ddr.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -397,6 +398,17 @@ static int setup_spl_uboot_offset(void)
+ 	return 0;
+ }
+ 
++static int setup_sdram_2_size( phys_size_t size)
++{
++	phys_size_t *pval;
++
++	pval = bloblist_ensure(BLOBLISTT_PHYS_SDRAM_2_SIZE, sizeof(phys_size_t));
++	if (!pval)
++		return -ENOENT;
++
++	*pval = size;
++	return 0;
++}
+ 
+ static int spl_common_init(bool setup_malloc)
+ {
+@@ -661,6 +673,7 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
+ 	}
+ 
+ 	setup_spl_uboot_offset();
++	setup_sdram_2_size( phys_sdram_2_size);
+ #if CONFIG_IS_ENABLED(BOARD_INIT)
+ 	spl_board_init();
+ #endif
+diff --git a/common/usb_hub.c b/common/usb_hub.c
+index 3d856e7de7..52d9c3d9e9 100644
+--- a/common/usb_hub.c
++++ b/common/usb_hub.c
+@@ -441,7 +441,8 @@ static int usb_scan_port(struct usb_device_scan *usb_scan)
+ 	 * Don't talk to the device before the query delay is expired.
+ 	 * This is needed for voltages to stabalize.
+ 	 */
+-	if (get_timer(0) < hub->query_delay)
++	if (get_timer(0) < (hub->query_delay+3000))
++//	if (get_timer(0) < hub->query_delay)
+ 		return 0;
+ 
+ 	ret = usb_get_port_status(dev, i + 1, portsts);
+diff --git a/configs/imx8mp_owa5x_defconfig b/configs/imx8mp_owa5x_defconfig
+index 20e12229a3..8cd34f64ee 100644
+--- a/configs/imx8mp_owa5x_defconfig
++++ b/configs/imx8mp_owa5x_defconfig
+@@ -37,8 +37,8 @@ CONFIG_NR_DRAM_BANKS=3
+ CONFIG_HUSH_PARSER=y
+ CONFIG_SYS_PROMPT="u-boot=> "
+ CONFIG_BOOTDELAY=0
+-# CONFIG_CMD_EXPORTENV is not set
+-# CONFIG_CMD_IMPORTENV is not set
++CONFIG_CMD_IMPORTENV=y
++CONFIG_CMD_EXPORTENV=y
+ CONFIG_CMD_ERASEENV=y
+ CONFIG_CMD_CRC32 is not set
+ # CONFIG_BOOTM_NETBSD is not set
+@@ -161,7 +161,7 @@ CONFIG_VIDEO_IMX_SEC_DSI=n
+ CONFIG_DM_VIDEO=n
+ CONFIG_VIDEO_LCD_RAYDIUM_RM67191=n
+ CONFIG_VIDEO_ADV7535=n
+-CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_SYS_WHITE_ON_BLACK=n
+ 
+ CONFIG_LOCALVERSION="-1.0.5"
+ # CONFIG_LOCALVERSION_AUTO is not set
+diff --git a/drivers/ddr/imx/imx8m/ddr_init.c b/drivers/ddr/imx/imx8m/ddr_init.c
+index c8c9314770..a37bb4cec4 100644
+--- a/drivers/ddr/imx/imx8m/ddr_init.c
++++ b/drivers/ddr/imx/imx8m/ddr_init.c
+@@ -11,6 +11,8 @@
+ #include <asm/arch/clock.h>
+ #include <asm/arch/sys_proto.h>
+ 
++phys_size_t phys_sdram_2_size = PHYS_SDRAM_2_SIZE;
++
+ void ddr_cfg_umctl2(struct dram_cfg_param *ddrc_cfg, int num)
+ {
+ 	int i = 0;
+@@ -94,10 +96,11 @@ void __weak board_dram_ecc_scrub(void)
+ int ddr_init(struct dram_timing_info *dram_timing)
+ {
+ 	unsigned int tmp, initial_drate, target_freq;
+-	int ret;
++	int ret, NumMem; //0->4GB, 1->2GB
+ 
+ 	printf("DDRINFO: start DRAM init\n");
+ 
++   for( NumMem=0; NumMem<2; NumMem++) {
+ 	/* Step1: Follow the power up procedure */
+ 	if (is_imx8mq()) {
+ 		reg32_write(SRC_DDRC_RCR_ADDR + 0x04, 0x8F00000F);
+@@ -173,8 +176,25 @@ int ddr_init(struct dram_timing_info *dram_timing)
+ 	debug("DDRINFO:ddrphy config start\n");
+ 
+ 	ret = ddr_cfg_phy(dram_timing);
+-	if (ret)
++   //2GB memory configured with 4GB values return error
++	if (ret) {
++      if( NumMem == 0) { //if error try 2GB memory
++//         printf("OWASYS: 4GB Config error, try 2GB!!!\n");
++         ddr_ddrc_cfg[2].val = 0xa1080020;
++         ddr_ddrc_cfg[39].val = 0x1f;
++         ddr_fsp0_cfg[9].val = 0x110;
++         ddr_fsp0_cfg[21].val = 0x1;
++         ddr_fsp1_cfg[10].val = 0x110;
++         ddr_fsp1_cfg[22].val = 0x1;
++         ddr_fsp2_cfg[10].val = 0x110;
++         ddr_fsp2_cfg[22].val = 0x1;
++         ddr_fsp0_2d_cfg[10].val = 0x110;
++         ddr_fsp0_2d_cfg[22].val = 0x1;
++         phys_sdram_2_size = 0x00;
++         continue;
++      }
+ 		return ret;
++   }
+ 
+ 	debug("DDRINFO: ddrphy config done\n");
+ 
+@@ -248,6 +268,11 @@ int ddr_init(struct dram_timing_info *dram_timing)
+ 
+ 	/* save the dram timing config into memory */
+ 	dram_config_save(dram_timing, CONFIG_SAVED_DRAM_TIMING_BASE);
++   break;
++
++   //No way of set 2GB/4GB memory reading Mode Registers
++/*   MrData = lpddr4_get_mr(); */
+ 
++   }
+ 	return 0;
+ }
+diff --git a/drivers/ddr/imx/imx8m/ddrphy_utils.c b/drivers/ddr/imx/imx8m/ddrphy_utils.c
+index 326b92d784..0f8baefb1f 100644
+--- a/drivers/ddr/imx/imx8m/ddrphy_utils.c
++++ b/drivers/ddr/imx/imx8m/ddrphy_utils.c
+@@ -104,7 +104,7 @@ int wait_ddrphy_training_complete(void)
+ 			debug("Training PASS\n");
+ 			return 0;
+ 		} else if (mail == 0xff) {
+-			printf("Training FAILED\n");
++			debug("Training FAILED\n");
+ 			return -1;
+ 		}
+ 	}
+diff --git a/drivers/mtd/nand/raw/mxs_nand.c b/drivers/mtd/nand/raw/mxs_nand.c
+index 603a84395f..ed881506f9 100644
+--- a/drivers/mtd/nand/raw/mxs_nand.c
++++ b/drivers/mtd/nand/raw/mxs_nand.c
+@@ -1118,9 +1118,12 @@ static int mxs_nand_set_geometry(struct mtd_info *mtd, struct bch_geometry *geo)
+ 		return -EINVAL;
+ 	}
+ 
++//   printf("%s ANGEL ecc_strength_ds(%d)ecc_step_ds(%d)oobsize(%d)legacy_bch_geometry(%d)\r\n", 
++//          __func__, chip->ecc_strength_ds, chip->ecc_step_ds, mtd->oobsize, nand_info->legacy_bch_geometry);
+ 	if ((!(chip->ecc_strength_ds > 0 && chip->ecc_step_ds > 0) &&
+ 	     mtd->oobsize < 1024) || nand_info->legacy_bch_geometry) {
+-		dev_warn(mtd->dev, "use legacy bch geometry\n");
++//		dev_warn(mtd->dev, "use legacy bch geometry\n");
++		printf("use legacy bch geometry\n");
+ 		return mxs_nand_legacy_calc_ecc_layout(geo, mtd);
+ 	}
+ 
+diff --git a/drivers/usb/musb-new/musb_uboot.c b/drivers/usb/musb-new/musb_uboot.c
+index 8ac2f0a78a..47ca08cb88 100644
+--- a/drivers/usb/musb-new/musb_uboot.c
++++ b/drivers/usb/musb-new/musb_uboot.c
+@@ -218,7 +218,8 @@ int musb_lowlevel_init(struct musb_host_data *host)
+ {
+ 	void *mbase;
+ 	/* USB spec says it may take up to 1 second for a device to connect */
+-	unsigned long timeout = get_timer(0) + 1000;
++/* OWASYS CUSTOMIZATION 25-04-23: several USB pendrives need more than 1s for the initialization*/
++	unsigned long timeout = get_timer(0) + 3500;
+ 	int ret;
+ 
+ 	if (!host->host) {
+diff --git a/include/asm-generic/global_data.h b/include/asm-generic/global_data.h
+index d12397243b..f1a8bdbf96 100644
+--- a/include/asm-generic/global_data.h
++++ b/include/asm-generic/global_data.h
+@@ -454,6 +454,7 @@ struct global_data {
+ 	char *smbios_version;
+ #endif
+    u32 uboot_offset_image;
++	phys_size_t phys_ram_2_size;		/* RAM 2 size */
+ };
+ 
+ /**
+diff --git a/include/bloblist.h b/include/bloblist.h
+index 76689a4280..1916026f99 100644
+--- a/include/bloblist.h
++++ b/include/bloblist.h
+@@ -41,6 +41,7 @@ enum bloblist_tag_t {
+ 
+ 	BLOBLISTT_COUNT,
+    BLOBLISTT_SPL_UBOOT_OFF, /* UBOOT image offset*/
++   BLOBLISTT_PHYS_SDRAM_2_SIZE, /* Size of SDRAM 2 */
+ };
+ 
+ /**
+diff --git a/include/configs/imx8mp_owa5x.h b/include/configs/imx8mp_owa5x.h
+index d86b189e8c..a68e5b5c39 100644
+--- a/include/configs/imx8mp_owa5x.h
++++ b/include/configs/imx8mp_owa5x.h
+@@ -82,6 +82,7 @@
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	CONFIG_MFG_ENV_SETTINGS \
+ 	"devicetreefile=devicetree.dtb\0" \
++	"enterflashmode=nand erase.part NAND.u-boot; reset;\0" \
+ 	"boot_owa5x=echo Look for boot scripts;" \
+       "if fatload mmc 1 0x82000000 owa5x-boot.script; then " \
+          "echo MMC boot script found; " \
+@@ -365,9 +366,9 @@
+ #define PHYS_SDRAM			0x40000000
+ #define PHYS_SDRAM_SIZE			0x80000000	/* 2 GB */
+ 
+-/*
++//Allways set for 2GB/4GB SW compatibility
+ #define PHYS_SDRAM_2			0xC0000000
+-#define PHYS_SDRAM_2_SIZE		0x80000000	*//* 2 GB */
++#define PHYS_SDRAM_2_SIZE		0x80000000	/* 2 GB */
+ //#define PHYS_SDRAM_2			0x100000000
+ #ifdef CONFIG_TARGET_IMX8MP_DDR4_EVK
+ //#define PHYS_SDRAM_2_SIZE		0x40000000	/* 1 GB */
+diff --git a/readme.txt b/readme.txt
+index a0aaecaa2a..90be2c2b39 100644
+--- a/readme.txt
++++ b/readme.txt
+@@ -1,5 +1,87 @@
+-Version 1.0.4
++Version 1.0.5
+ -------------
++17-05-2023
++   - configs/imx8mp_owa5x_defconfig
++     set CONFIG_SYS_WHITE_ON_BLACK=n
++   - ucompilation.sh
++     Change source path
++
++04-05-2023:
++   - arch/arm/dts/imx8mp-owa5x.dts
++     Enable usb3_1 node.
++     Enable ETH_REG_ON to allow LAN8710 be detected in kernel.
++   - arch/arm/dts/imx8mp.dtsi
++     Change "compatible" in usb_dwc3_1 node.
++   - drivers/mtd/nand/raw/mxs_nand.c
++     Change warning trace.
++
++28-04-2023:
++   Changes of version 1.0.5 from 5.4.70_2.3.2
++   - configs/imx8mp_owa5x_defconfig
++     Add CONFIG_CMD_IMPORTENV=y, CONFIG_CMD_EXPORTENV=y
++   - tools/env/fw_env.c
++     Fix read/write environment tools. If any environment partition is not usable
++     redundancy is lost, but it is still possible to use one partition.
++   - include/configs/imx8mp_owa5x.h
++     Add "enterflashmode" environment variable.
++   - common/usb_hub.c
++     Change usb_scan_port() increment the time-out. Some USB pen drives were
++     not detected.
++
++28-04-2023:
++   Changes of version 1.0.4 from 5.4.70_2.3.2
++   Same FW for 2GB/4GB RAM memories.
++   - arch/arm/dts/imx8mp-owa5x.dts
++     Change RAM memory definition.
++   - arch/arm/include/asm/arch-imx8m/ddr.h
++     Add extern variables   
++   - arch/arm/mach-imx/imx8m/soc.c
++     Change values in imx8m_mem_map[] for DRAM2
++     enable_caches() reset imx8m_mem_map[] for DRAM2 if not 4GB
++     Change PHYS_SDRAM_2_SIZE by gd->phys_ram_2_size
++   - board/freescale/imx8mp_owa5x/lpddr4_timing.c
++     Default values for 4GB memory
++   - common/board_f.c
++     Read phys_ram_2_size saved in SPL
++   - common/spl/spl.c
++     Create and save bloblist variable for phys_ram_2_size
++   - configs/imx8mp_owa5x_defconfig
++     Set CONFIG_VIDEO_IMX_LCDIFV3=n, CONFIG_VIDEO_IMX_SEC_DSI=n,
++     CONFIG_DM_VIDEO=n, CONFIG_VIDEO_LCD_RAYDIUM_RM67191=n,
++     CONFIG_VIDEO_ADV7535=n, CONFIG_SYS_WHITE_ON_BLACK=n
++   - drivers/ddr/imx/imx8m/ddr_init.c
++     ddr_init() compatible for 2GB/4GB memories
++   - drivers/ddr/imx/imx8m/ddrphy_utils.c
++     wait_ddrphy_training_complete() show trace only in debug mode
++   - include/asm-generic/global_data.h
++     Add phys_ram_2_size to "struct global_data"
++   - include/bloblist.h
++     Add BLOBLISTT_PHYS_SDRAM_2_SIZE to "enum bloblist_tag_t"
++   - include/configs/imx8mp_owa5x.h
++     Always set PHYS_SDRAM_2 and PHYS_SDRAM_2_SIZE for 2GB/4GB FW
++     compatibility.
++
++26-04-2023:
++   - arch/arm/dts/imx8mp-owa5x.dts
++     Enable "usb3_1" node
++   - arch/arm/dts/imx8mp.dtsi
++     Change node "usb_dwc3_1" compatible property
++     USB was not detected
++   - ucompilation.sh
++     Change compiler version to 11.2.0
++
++08-02-2023
++    imx8mp_owa5x_defconfig: thermal unit enabled.
++
++20-12-2022
++    Now the message -Fail to setup video link- does not appear at boot
++
++30-09-2022
++    Update generate_diff.yml: the patch gets *patch extension so Yocto doesn't complain.
++
++28-09-2022
++    Add gitlab-ci job to generate patch
++
+ 22-09-2022:
+    - Based on NXP SDK version 5.10.72_2.2.2.
+    - Add Owasys changes up to 1.0.3 version
+diff --git a/tools/env/fw_env.c b/tools/env/fw_env.c
+index 2a61a5d6f0..c22860a900 100644
+--- a/tools/env/fw_env.c
++++ b/tools/env/fw_env.c
+@@ -47,6 +47,7 @@ struct env_opts default_opts = {
+ 	.config_file = CONFIG_FILE
+ #endif
+ };
++//#define DEBUG
+ 
+ #define DIV_ROUND_UP(n, d)	(((n) + (d) - 1) / (d))
+ 
+@@ -75,6 +76,7 @@ static struct envdev_s envdevices[2] = {
+ };
+ 
+ static int dev_current;
++static int redundant_error = 0, primary_error = 0;
+ 
+ #define DEVNAME(i)    envdevices[(i)].devname
+ #define DEVOFFSET(i)  envdevices[(i)].devoff
+@@ -1293,7 +1295,7 @@ static int flash_io_write(int fd_current)
+ 	int fd_target = -1, rc, dev_target;
+ 	const char *dname, *target_temp = NULL;
+ 
+-	if (have_redund_env) {
++	if ((have_redund_env) && (primary_error == 0) && (redundant_error == 0) ) {
+ 		/* switch to next partition for writing */
+ 		dev_target = !dev_current;
+ 		/* dev_target: fd_target, erase_target */
+@@ -1408,7 +1410,7 @@ static int flash_io(int mode)
+  */
+ int fw_env_open(struct env_opts *opts)
+ {
+-	int crc0, crc0_ok;
++	int crc0, crc0_ok = 0;
+ 	unsigned char flag0;
+ 	void *addr0 = NULL;
+ 
+@@ -1427,6 +1429,9 @@ int fw_env_open(struct env_opts *opts)
+ 	if (parse_config(opts))	/* should fill envdevices */
+ 		return -EINVAL;
+ 
++	redundant_error = 0;
++	primary_error = 0;
++	dev_current = 0;
+ 	addr0 = calloc(1, CUR_ENVSIZE);
+ 	if (addr0 == NULL) {
+ 		fprintf(stderr,
+@@ -1453,13 +1458,20 @@ int fw_env_open(struct env_opts *opts)
+ 
+ 	dev_current = 0;
+ 	if (flash_io(O_RDONLY)) {
+-		ret = -EIO;
+-		goto open_cleanup;
++		if (have_redund_env) {
++			fprintf(stderr, "Warning: main env failed, redundancy is lost!\n");
++			primary_error = 1;
++		} else {
++			fprintf(stderr, "Warning: env partition failed!\n");
++			ret = -EIO;
++			goto open_cleanup;
++		}
+ 	}
+ 
+-	crc0 = crc32(0, (uint8_t *)environment.data, ENV_SIZE);
+-
+-	crc0_ok = (crc0 == *environment.crc);
++	if( primary_error == 0) {
++		crc0 = crc32(0, (uint8_t *)environment.data, ENV_SIZE);
++		crc0_ok = (crc0 == *environment.crc);
++	}
+ 	if (!have_redund_env) {
+ 		if (!crc0_ok) {
+ 			fprintf(stderr,
+@@ -1488,8 +1500,9 @@ int fw_env_open(struct env_opts *opts)
+ 		 */
+ 		environment.image = addr1;
+ 		if (flash_io(O_RDONLY)) {
+-			ret = -EIO;
+-			goto open_cleanup;
++/*			ret = -EIO;
++			goto open_cleanup;*/
++			redundant_error = 1;
+ 		}
+ 
+ 		/* Check flag scheme compatibility */
+@@ -1515,64 +1528,78 @@ int fw_env_open(struct env_opts *opts)
+ 			goto open_cleanup;
+ 		}
+ 
+-		crc1 = crc32(0, (uint8_t *)redundant->data, ENV_SIZE);
+-
+-		crc1_ok = (crc1 == redundant->crc);
+-		flag1 = redundant->flags;
+-
+-		/*
+-		 * environment.data still points to ((struct
+-		 * env_image_redundant *)addr0)->data. If the two
+-		 * environments differ, or one has bad crc, force a
+-		 * write-out by marking the environment dirty.
+-		 */
+-		if (memcmp(environment.data, redundant->data, ENV_SIZE) ||
+-		    !crc0_ok || !crc1_ok)
+-			environment.dirty = 1;
+-
+-		if (crc0_ok && !crc1_ok) {
+-			dev_current = 0;
+-		} else if (!crc0_ok && crc1_ok) {
+-			dev_current = 1;
+-		} else if (!crc0_ok && !crc1_ok) {
+-			fprintf(stderr,
+-				"Warning: Bad CRC, using default environment\n");
+-			memcpy(environment.data, default_environment,
+-			       sizeof(default_environment));
+-			environment.dirty = 1;
++		if( redundant_error == 1) {
++			fprintf(stderr, "Warning: redundant env failed, redundancy is lost!\n");
++			if( primary_error == 1) {
++				fprintf(stderr, "Warning: Bad env partitions!\n");
++				ret = -EIO;
++				goto open_cleanup;
++			}
+ 			dev_current = 0;
+ 		} else {
+-			switch (environment.flag_scheme) {
+-			case FLAG_BOOLEAN:
+-				if (flag0 == ENV_REDUND_ACTIVE &&
+-				    flag1 == ENV_REDUND_OBSOLETE) {
++			crc1 = crc32(0, (uint8_t *)redundant->data, ENV_SIZE);
++
++			crc1_ok = (crc1 == redundant->crc);
++			flag1 = redundant->flags;
++
++			if( primary_error == 1) {
++				dev_current = 1;
++			} else {
++				/*
++				 * environment.data still points to ((struct
++				 * env_image_redundant *)addr0)->data. If the two
++				 * environments differ, or one has bad crc, force a
++				 * write-out by marking the environment dirty.
++				 */
++				if (memcmp(environment.data, redundant->data, ENV_SIZE) ||
++				    !crc0_ok || !crc1_ok)
++					environment.dirty = 1;
++
++				if (crc0_ok && !crc1_ok) {
+ 					dev_current = 0;
+-				} else if (flag0 == ENV_REDUND_OBSOLETE &&
+-					   flag1 == ENV_REDUND_ACTIVE) {
++				} else if (!crc0_ok && crc1_ok) {
+ 					dev_current = 1;
+-				} else if (flag0 == flag1) {
+-					dev_current = 0;
+-				} else if (flag0 == 0xFF) {
++				} else if (!crc0_ok && !crc1_ok) {
++					fprintf(stderr,
++						"Warning: Bad CRC, using default environment\n");
++					memcpy(environment.data, default_environment,
++					       sizeof(default_environment));
++					environment.dirty = 1;
+ 					dev_current = 0;
+-				} else if (flag1 == 0xFF) {
+-					dev_current = 1;
+ 				} else {
+-					dev_current = 0;
++			switch (environment.flag_scheme) {
++					case FLAG_BOOLEAN:
++						if (flag0 == ENV_REDUND_ACTIVE &&
++						    flag1 == ENV_REDUND_OBSOLETE) {
++							dev_current = 0;
++						} else if (flag0 == ENV_REDUND_OBSOLETE &&
++							   flag1 == ENV_REDUND_ACTIVE) {
++							dev_current = 1;
++						} else if (flag0 == flag1) {
++							dev_current = 0;
++						} else if (flag0 == 0xFF) {
++							dev_current = 0;
++						} else if (flag1 == 0xFF) {
++							dev_current = 1;
++						} else {
++							dev_current = 0;
++						}
++						break;
++					case FLAG_INCREMENTAL:
++						if (flag0 == 255 && flag1 == 0)
++							dev_current = 1;
++						else if ((flag1 == 255 && flag0 == 0) ||
++							 flag0 >= flag1)
++							dev_current = 0;
++						else	/* flag1 > flag0 */
++							dev_current = 1;
++						break;
++					default:
++						fprintf(stderr, "Unknown flag scheme %u\n",
++							environment.flag_scheme);
++						return -1;
++					}
+ 				}
+-				break;
+-			case FLAG_INCREMENTAL:
+-				if (flag0 == 255 && flag1 == 0)
+-					dev_current = 1;
+-				else if ((flag1 == 255 && flag0 == 0) ||
+-					 flag0 >= flag1)
+-					dev_current = 0;
+-				else	/* flag1 > flag0 */
+-					dev_current = 1;
+-				break;
+-			default:
+-				fprintf(stderr, "Unknown flag scheme %u\n",
+-					environment.flag_scheme);
+-				return -1;
+ 			}
+ 		}
+ 
+diff --git a/ucompilation.sh b/ucompilation.sh
+index 09dc556cf7..2a5ecd9b00 100755
+--- a/ucompilation.sh
++++ b/ucompilation.sh
+@@ -1,6 +1,7 @@
+ #!/bin/bash
+ 
+-source /opt/crosstool/fsl-imx-xwayland/5.10-hardknott/environment-setup-cortexa53-crypto-poky-linux
++#source /opt/crosstool/fsl-imx-xwayland/5.10-hardknott/environment-setup-cortexa53-crypto-poky-linux
++source /opt/crosstool/fsl-imx-xwayland/5.15-kirkstone/environment-setup-cortexa53-fslc-linux
+ #export ARCH=arm64
+ 
+ if [ -e './Install/' ]

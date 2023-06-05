@@ -1,0 +1,13 @@
+[Unit]
+Description     = odm-ota, which runs at boot
+
+[Service]
+ExecStart       = /usr/bin/odm-ota
+Restart         = on-failure
+RestartSec      = 60
+StandardOutput  = null
+StandardError   = null
+
+[Install]
+WantedBy        = multi-user.target
+Alias           = owasysd-odm-ota.service

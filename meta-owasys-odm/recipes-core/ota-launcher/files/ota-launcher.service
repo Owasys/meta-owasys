@@ -1,0 +1,13 @@
+[Unit]
+Description     = ota-launcher, which runs at boot
+
+[Service]
+ExecStart       = /usr/bin/ota-launcher
+Restart         = on-failure
+RestartSec      = 60
+StandardOutput  = null
+StandardError   = null
+
+[Install]
+WantedBy        = multi-user.target
+Alias           = owasysd-ota-launcher.service

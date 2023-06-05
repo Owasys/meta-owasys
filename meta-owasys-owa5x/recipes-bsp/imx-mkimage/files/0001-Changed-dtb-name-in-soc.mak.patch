@@ -1,0 +1,25 @@
+From 455c1ba0ff4bed4b08c5a5125f87748041619dcf Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Thu, 25 Aug 2022 15:22:41 +0200
+Subject: [PATCH] Changed dtb name in soc.mak
+
+---
+ iMX8M/soc.mak | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/iMX8M/soc.mak b/iMX8M/soc.mak
+index 30ecefd..f6e236e 100644
+--- a/iMX8M/soc.mak
++++ b/iMX8M/soc.mak
+@@ -137,7 +137,7 @@ u-boot-atf-tee.bin: u-boot.bin bl31.bin tee.bin
+ clean:
+ 	@rm -f $(MKIMG) u-boot-atf.bin u-boot-atf-tee.bin u-boot-spl-ddr.bin u-boot.itb u-boot.its u-boot-ddr3l.itb u-boot-ddr3l.its u-boot-spl-ddr3l.bin u-boot-ddr4.itb u-boot-ddr4.its u-boot-spl-ddr4.bin u-boot-ddr4-evk.itb u-boot-ivt.itb u-boot-ddr4-evk.its $(OUTIMG)
+ 
+-dtbs = evk.dtb
++dtbs = imx8mp-owa5x.dtb
+ $(dtbs):
+ 	./$(DTB_PREPROC) $(PLAT)-evk.dtb $(dtbs)
+ 
+-- 
+2.25.1
+

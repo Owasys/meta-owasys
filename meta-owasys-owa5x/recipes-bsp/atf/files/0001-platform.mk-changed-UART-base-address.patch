@@ -1,0 +1,46 @@
+From 0d5a53e6a2afc84aa53a7a7859ea73d8eef5fe84 Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Fri, 19 May 2023 10:38:56 +0200
+Subject: [PATCH] <platform.mk>: changed UART base address
+
+    In the owa5X a different UART is used than the one in the imx8mp EVK.
+
+Changelog: fixed
+Signed-off-by: Alvaro's avatarAlvaro Guzman <alvaro.guzman@owasys.com>
+---
+ atf-compilation.sh                | 7 +++++++
+ plat/imx/imx8m/imx8mp/platform.mk | 3 ++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+ create mode 100755 atf-compilation.sh
+
+diff --git a/atf-compilation.sh b/atf-compilation.sh
+new file mode 100755
+index 000000000..e9c176caf
+--- /dev/null
++++ b/atf-compilation.sh
+@@ -0,0 +1,7 @@
++#!/bin/bash
++# You must source your own environment-setup-file
++# source /opt/cetus/1.3/environment-setup-cortexa53-fslc-linux
++make clean PLAT=imx8mp bl31
++rm -fr build
++unset LDFLAGS
++make PLAT=imx8mp bl31
+\ No newline at end of file
+diff --git a/plat/imx/imx8m/imx8mp/platform.mk b/plat/imx/imx8m/imx8mp/platform.mk
+index d7999d846..7278fc392 100644
+--- a/plat/imx/imx8m/imx8mp/platform.mk
++++ b/plat/imx/imx8m/imx8mp/platform.mk
+@@ -61,7 +61,8 @@ $(eval $(call add_define,BL32_BASE))
+ BL32_SIZE		?=	0x2000000
+ $(eval $(call add_define,BL32_SIZE))
+ 
+-IMX_BOOT_UART_BASE	?=	0x30890000
++# Selected UART1 for owa5X device
++IMX_BOOT_UART_BASE	?=	0x30860000
+ $(eval $(call add_define,IMX_BOOT_UART_BASE))
+ 
+ ifeq (${SPD},trusty)
+-- 
+2.25.1
+

@@ -1,0 +1,39 @@
+{
+   "name" : "pollux-net",
+   "cycle": 1000,
+   "internet"  : 1,
+   "ping"      :  300,
+   "connections"  :  ["8.8.8.8", "8.8.4.4", "1.1.1.1"],
+   "manual_register": 1,
+   "del_forbidden_net": {
+      "enabled": true,
+      "delete_period": 43200
+   },
+   "redis": {
+   "socket": "/tmp/redis.sock",
+   "database": 0
+   },
+  "min_rssi": 4,
+  "sim_on_chip": {
+        "enabled": false,
+        "code": "",
+        "file": "/etc/pollux/gprs.net"
+     },
+   "interfaces": {
+      "comment"   : "interfaces and the behaviour they must have to...",
+      "wan"       :{
+         "name"         :  "ppp0",
+         "enable"       :  1,
+         "fence"        :  0,
+         "file"         :  "/etc/pollux/gprs.net",
+         "internet"     :  1,
+         "ip"           :  "",
+         "mask"         :  "",
+         "code"         :  "",
+         "id"           :  "",
+         "whitelist"    :  "/home/conf/phone-whitelist.json",
+         "restart_me_algo": 1
+      },
+      "_todo": "Not implemented: tetra, bluetooth, iridium...."
+   }
+}

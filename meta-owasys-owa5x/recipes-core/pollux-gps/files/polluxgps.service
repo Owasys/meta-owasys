@@ -1,0 +1,25 @@
+[Unit]
+Description      = pollux-gps service
+Wants            = owasysd-pmsrv-ready.service redis.service
+After            = syslog.target owasysd-pmsrv-ready.service network.target redis.service
+StopWhenUnneeded = no
+#ConditionPathExists=!/var/lock/owaapi.lck
+StartLimitInterval  = 5min
+StartLimitBurst     = 2
+StartLimitAction    = reboot
+
+[Service]
+ExecStartPre=/bin/sleep 2
+ExecStart   = /usr/bin/pollux-gps --start
+ExecStop    = /usr/bin/pollux-gps -q
+StandardOutput  = null
+StandardError   = null
+
+# In case if it gets stopped, restart it immediately
+Restart     = on-failure
+RestartSec  = 300
+
+[Install]
+WantedBy    = multi-user.target
+Alias=owasysd-polluxgps.service
+
