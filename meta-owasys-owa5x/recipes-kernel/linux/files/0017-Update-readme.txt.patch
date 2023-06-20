@@ -1,0 +1,29 @@
+From 54e8221fc9da4cd761528f5e43092ff6096100d9 Mon Sep 17 00:00:00 2001
+From: Angel Falcon <angel.falcon@owasys.com>
+Date: Thu, 1 Jun 2023 11:49:24 +0200
+Subject: [PATCH] Update readme.txt
+
+---
+ readme.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/readme.txt b/readme.txt
+index bc9e7832e09c..60827b0a41b4 100644
+--- a/readme.txt
++++ b/readme.txt
+@@ -1,3 +1,12 @@
++01-06-2023:
++   - owa5x_config.OWA
++     Add NFT support 
++     Set version to 1.0.8-rc0
++   
++
++31-05-2023
++   - UBI_FAST_MAP: speed up boot
++
+ Version 1.0.8
+ -------------
+ 04-05-2023:
+-- 
+2.25.1
+

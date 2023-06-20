@@ -11,5 +11,8 @@ RDEPENDS:${PN} = "\
     rauc \
     casync \
     owasysd-boot-check \
+    odm-agent \
     odm-remote-shell \
+    owasysd-measured-boot \
+    package \
 "

@@ -20,7 +20,7 @@ do_install() {
   install -d ${D}${sysconfdir}/systemd/system
 
   install -m 0755 ${WORKDIR}/odm-remote-shell           ${D}${bindir}
-  install ${WORKDIR}/odm-remote-shell.service           ${D}${sysconfdir}/systemd/system
+  install -m 0644 ${WORKDIR}/odm-remote-shell.service           ${D}${sysconfdir}/systemd/system
 }
 
 FILES:${PN} += " \

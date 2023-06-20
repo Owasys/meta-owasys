@@ -1,0 +1,20 @@
+[Unit]
+Description     = odm-agent, Owasys Device Manager agent
+Wants           = pmsrv.service redis-server.service rauc.service
+After           = syslog.service pmsrv.service redis-server.service rauc.service
+StopWhenUnneeded= no
+
+[Service]
+ExecStartPre    = /bin/sleep 10
+ExecStartPre    = mkdir -p /var/log/odm
+ExecStartPre    = mkdir -p /data/odm/downloads
+ExecStart       = /usr/bin/odm-agent -f /etc/odm/odm.json --start -D6
+ExecStop        = /usr/bin/odm-agent -q
+Restart         = on-failure
+RestartSec      = 60
+StandardOutput  = null
+StandardError   = null
+
+[Install]
+WantedBy        = multi-user.target
+Alias           = odm-agent

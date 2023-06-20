@@ -1,0 +1,115 @@
+From 0ec10066a96efc33ffe03a80d6aadf02095b4a85 Mon Sep 17 00:00:00 2001
+From: Angel Falcon <angel.falcon@owasys.com>
+Date: Tue, 6 Jun 2023 15:24:41 +0200
+Subject: [PATCH] V1.0.8-rc1. Add USB_NET_CDC_MBIM
+
+---
+ .config          | 10 +++++++---
+ owa5x_config.OWA |  8 ++++++--
+ readme.txt       | 11 +++++++++++
+ 3 files changed, 24 insertions(+), 5 deletions(-)
+
+diff --git a/.config b/.config
+index cc2caa3dbbba..0d1999cf8541 100644
+--- a/.config
++++ b/.config
+@@ -20,7 +20,7 @@ CONFIG_THREAD_INFO_IN_TASK=y
+ #
+ CONFIG_INIT_ENV_ARG_LIMIT=32
+ # CONFIG_COMPILE_TEST is not set
+-CONFIG_LOCALVERSION="-1.0.8-rc0"
++CONFIG_LOCALVERSION="-1.0.8-rc1"
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_BUILD_SALT=""
+ CONFIG_DEFAULT_INIT=""
+@@ -2287,6 +2287,8 @@ CONFIG_BLK_DEV_MD=m
+ CONFIG_BLK_DEV_DM_BUILTIN=y
+ CONFIG_BLK_DEV_DM=m
+ # CONFIG_DM_DEBUG is not set
++CONFIG_DM_BUFIO=m
++# CONFIG_DM_DEBUG_BLOCK_MANAGER_LOCKING is not set
+ # CONFIG_DM_UNSTRIPED is not set
+ CONFIG_DM_CRYPT=m
+ # CONFIG_DM_SNAPSHOT is not set
+@@ -2305,7 +2307,9 @@ CONFIG_DM_ZERO=m
+ # CONFIG_DM_DUST is not set
+ # CONFIG_DM_UEVENT is not set
+ # CONFIG_DM_FLAKEY is not set
+-# CONFIG_DM_VERITY is not set
++CONFIG_DM_VERITY=m
++# CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG is not set
++# CONFIG_DM_VERITY_FEC is not set
+ # CONFIG_DM_SWITCH is not set
+ # CONFIG_DM_LOG_WRITES is not set
+ # CONFIG_DM_INTEGRITY is not set
+@@ -2749,7 +2753,7 @@ CONFIG_USB_NET_CDCETHER=y
+ # CONFIG_USB_NET_CDC_EEM is not set
+ CONFIG_USB_NET_CDC_NCM=y
+ # CONFIG_USB_NET_HUAWEI_CDC_NCM is not set
+-# CONFIG_USB_NET_CDC_MBIM is not set
++CONFIG_USB_NET_CDC_MBIM=y
+ CONFIG_USB_NET_DM9601=m
+ # CONFIG_USB_NET_SR9700 is not set
+ CONFIG_USB_NET_SR9800=m
+diff --git a/owa5x_config.OWA b/owa5x_config.OWA
+index bdf8cb2c74dc..0d1999cf8541 100644
+--- a/owa5x_config.OWA
++++ b/owa5x_config.OWA
+@@ -20,7 +20,7 @@ CONFIG_THREAD_INFO_IN_TASK=y
+ #
+ CONFIG_INIT_ENV_ARG_LIMIT=32
+ # CONFIG_COMPILE_TEST is not set
+-CONFIG_LOCALVERSION="-1.0.8-rc0"
++CONFIG_LOCALVERSION="-1.0.8-rc1"
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_BUILD_SALT=""
+ CONFIG_DEFAULT_INIT=""
+@@ -2287,6 +2287,8 @@ CONFIG_BLK_DEV_MD=m
+ CONFIG_BLK_DEV_DM_BUILTIN=y
+ CONFIG_BLK_DEV_DM=m
+ # CONFIG_DM_DEBUG is not set
++CONFIG_DM_BUFIO=m
++# CONFIG_DM_DEBUG_BLOCK_MANAGER_LOCKING is not set
+ # CONFIG_DM_UNSTRIPED is not set
+ CONFIG_DM_CRYPT=m
+ # CONFIG_DM_SNAPSHOT is not set
+@@ -2306,6 +2308,8 @@ CONFIG_DM_ZERO=m
+ # CONFIG_DM_UEVENT is not set
+ # CONFIG_DM_FLAKEY is not set
+ CONFIG_DM_VERITY=m
++# CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG is not set
++# CONFIG_DM_VERITY_FEC is not set
+ # CONFIG_DM_SWITCH is not set
+ # CONFIG_DM_LOG_WRITES is not set
+ # CONFIG_DM_INTEGRITY is not set
+@@ -2749,7 +2753,7 @@ CONFIG_USB_NET_CDCETHER=y
+ # CONFIG_USB_NET_CDC_EEM is not set
+ CONFIG_USB_NET_CDC_NCM=y
+ # CONFIG_USB_NET_HUAWEI_CDC_NCM is not set
+-# CONFIG_USB_NET_CDC_MBIM is not set
++CONFIG_USB_NET_CDC_MBIM=y
+ CONFIG_USB_NET_DM9601=m
+ # CONFIG_USB_NET_SR9700 is not set
+ CONFIG_USB_NET_SR9800=m
+diff --git a/readme.txt b/readme.txt
+index 60827b0a41b4..8e022ae3889b 100644
+--- a/readme.txt
++++ b/readme.txt
+@@ -1,3 +1,14 @@
++Version 1.0.8
++-------------
++06-06-2023:
++   - owa5x_config.OWA
++     Add CONFIG_USB_NET_CDC_MBIM=y
++     Set version to 1.0.8-rc1
++     
++
++05-06-2023
++   - owa5x_config.OWA: added verity
++
+ 01-06-2023:
+    - owa5x_config.OWA
+      Add NFT support 
+-- 
+2.25.1
+

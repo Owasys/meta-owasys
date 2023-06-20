@@ -8,20 +8,19 @@ inherit core-image image_types
 # Set rootfs to 460MiB by default
 IMAGE_OVERHEAD_FACTOR ?= "1.0"
 IMAGE_ROOTFS_SIZE ?= "460000"
-IMAGE_FSTYPES += " tar.gz "
-IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devicetree"
+#IMAGE_FSTYPES += " tar.gz "
+IMAGE_INSTALL = "   packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL} kernel-devicetree"
 IMAGE_INSTALL += "  systemd-analyze iw mtd-utils mtd-utils-ubifs can-utils openssh sudo \
                     rsync ppp alsa-utils iproute2 net-tools e2fsprogs \
                     bluez5 imx-kobs inetutils libev e2fsprogs-resize2fs redis \
                     hiredis tpm2-abrmd tpm2-tools tpm2-tss packagegroup-core-base-utils \
-                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz vim \
+                    tpm2-tss-engine tpm2-openssl u-boot-fw-utils lrzsz vim jq \
 "
 
 IMAGE_INSTALL:append = " \
                         pmsrv-service \
                         u-boot-owasys \
                         imx-boot-owasys \
-                        first-boot-operations \
                         generic-startup \
                         alsa-lib \
                         owasys-libs \
@@ -49,13 +48,14 @@ IMAGE_INSTALL:append = " \
                         ppp-owasys \
                         data-folder \
                         device-folder \
-                        fstab \
+                        fstab-bundle \
                         mlanutl \
                         mff2select \
                         system-maintenance \
                         system-maintenance-service \
                         owasysd-pmsrv-ready \
                         packagegroup-pollux \
+                        packagegroup-odm \
                         owasys-sysctl \
                         owasysd-measured-boot \
                         owasysd-timesync \

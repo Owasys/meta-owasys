@@ -26,6 +26,10 @@ measure_dtb
 measure_init
 measure_linker
 
+if [ ! -d "/device/tpm" ]; then
+   /usr/bin/create-provision-keys.sh
+fi
+
 }
 
 measure_bootloader() 

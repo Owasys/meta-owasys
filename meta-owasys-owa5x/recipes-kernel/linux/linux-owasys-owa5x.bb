@@ -26,6 +26,11 @@ SRC_URI = " git://github.com/nxp-imx/linux-imx.git;protocol=https;branch=${SRCBR
             file://0012-Remove_error_caam.patch \
             file://0013-UBI_FAST_MAP.patch \
             file://0014-Changeg-.gitignore.patch \
+            file://0015-qReapply-.gitignore.patch \
+            file://0016-Set-release-version-1.0.8-rc0.patch \
+            file://0017-Update-readme.txt.patch \
+            file://0018-owa5x_config.OWA-added-verity.patch \
+            file://0019-V1.0.8-rc1.-Add-USB_NET_CDC_MBIM.patch \
 "
 
 LINUX_VERSION = "5.10.72"

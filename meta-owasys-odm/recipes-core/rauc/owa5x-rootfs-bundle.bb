@@ -31,6 +31,7 @@ RAUC_CERT_FILE ?= "root-ca.pem"
 RAUC_KEYRING_FILE ?= "root-ca.pem"
 
 
+RAUC_BUNDLE_COMPATIBLE ?= "owa5"
 
 #   RAUC_BUNDLE_COMPATIBLE ?= "My Super Product"
 #   RAUC_BUNDLE_VERSION ?= "v2015-06-07-1"

@@ -6,6 +6,7 @@ inherit systemd
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI = " file://owasysd-measured-boot.service \
             file://measured-boot-operations.sh \
+            file://create-provision-keys.sh \
 "
 RDEPENDS:${PN} += "bash"
 SYSTEMD_SERVICE:${PN} += "owasysd-measured-boot.service "
@@ -17,6 +18,7 @@ do_install () {
         install -m 0644 ${WORKDIR}/owasysd-measured-boot.service ${D}${systemd_unitdir}/system/
 
         install -d ${D}${bindir}
+        install -m 0755 ${WORKDIR}/create-provision-keys.sh ${D}${bindir}
         install -m 0755 ${WORKDIR}/measured-boot-operations.sh ${D}${bindir}
 
 }

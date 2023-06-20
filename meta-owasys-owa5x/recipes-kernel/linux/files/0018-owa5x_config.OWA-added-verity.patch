@@ -1,0 +1,31 @@
+From 636603bbaac62deb8de150a15aec4ecc15d00e1e Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Mon, 5 Jun 2023 13:43:17 +0200
+Subject: [PATCH] owa5x_config.OWA: added verity
+
+Added CONFIG_DM_VERITY as a module in order to
+have it available for installation of RAUC's verity
+bundles.
+
+Changelog: added
+Signed-off-by: Alvaro Guzman <alvaro.guzman@owasys.com>
+---
+ owa5x_config.OWA | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/owa5x_config.OWA b/owa5x_config.OWA
+index cc2caa3dbbba..bdf8cb2c74dc 100644
+--- a/owa5x_config.OWA
++++ b/owa5x_config.OWA
+@@ -2305,7 +2305,7 @@ CONFIG_DM_ZERO=m
+ # CONFIG_DM_DUST is not set
+ # CONFIG_DM_UEVENT is not set
+ # CONFIG_DM_FLAKEY is not set
+-# CONFIG_DM_VERITY is not set
++CONFIG_DM_VERITY=m
+ # CONFIG_DM_SWITCH is not set
+ # CONFIG_DM_LOG_WRITES is not set
+ # CONFIG_DM_INTEGRITY is not set
+-- 
+2.25.1
+

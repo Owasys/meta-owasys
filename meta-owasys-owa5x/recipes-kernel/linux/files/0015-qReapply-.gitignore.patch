@@ -1,0 +1,23 @@
+From 4cab3b23b7cd34fffe014d270f2495f44cc37893 Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Mon, 5 Jun 2023 10:40:47 +0200
+Subject: [PATCH]  qReapply .gitignore
+
+---
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/.gitignore b/.gitignore
+index 980bd77cafa0..3364d72e17a1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -158,3 +158,6 @@ x509.genkey
+ 
+ # Documentation toolchain
+ sphinx_*/
++
++!.gitlab-ci.yml
++!.gitlab/
+-- 
+2.25.1
+

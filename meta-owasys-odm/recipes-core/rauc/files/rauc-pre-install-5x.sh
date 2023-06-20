@@ -31,35 +31,11 @@ if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
     exit
 fi
 
-MOUNT_PATH="/tmp/main"
-
- ################################# aux functions #############################
-
-get_booted_partition(){
-    echo "$RAUC_CURRENT_BOOTNAME"
-}
-
-make_boot_md5_files(){
-    local boot_folder_path="/boot"
-    local uboot="$boot_folder_path/owa5x-flash.bin"
-    local md5_file_path="/data/odm-ota/config/"
-
-    if [ -f "$uboot" ]; then
-        echo ""
-        echo "Creating uboot md5 file..."
-        echo ""
-        local md5=($(md5sum "$uboot"))
-        echo "$md5" > "$md5_file_path/owa5x-flash.md5"
-    fi
-}
-
 ################################# main function #############################
 
 main() {
-    local booted
     local mtdNumber=5
-    local ubiPath="/dev/ubi_file_systemB" 
-    #booted=get_booted_partition
+    local ubiPath="/dev/ubi_file_systemB"
     if [ "$RAUC_CURRENT_BOOTNAME" == "file-systemA" ]; then
         mtdNumber=5
         ubiPath="/dev/ubi_file_systemB"
