@@ -1,0 +1,5 @@
+# UNCONFIGURED FSTAB FOR BASE SYSTEM
+# <device>        <dir>           <type>        <options>        <dump> <fsck>"
+ubi0:device       /device         ubifs         defaults         0      0
+/dev/mmcblk2p1    /data/            ext4          defaults         0      0
+/dev/mmcblk2p2    /data_backup/     ext4          defaults         0      0

@@ -1,0 +1,13 @@
+[Unit]
+Description     = odm-remote-shell, which runs at boot
+
+[Service]
+ExecStart       = /usr/bin/odm-remote-shell
+Restart         = on-failure
+RestartSec      = 60
+StandardOutput  = null
+StandardError   = null
+
+[Install]
+WantedBy        = multi-user.target
+Alias           = owasysd-odm-remote-shell.service

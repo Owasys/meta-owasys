@@ -1,9 +1,0 @@
-[Unit]
-Description = Service to make available the owasys SN of the device through a file at tmp"
-After       = owasysd-pmsrv-ready.service
-
-[Service]
-ExecStart   = /usr/bin/owasys-hw-sn-file.sh
-
-[Install]
-WantedBy    = multi-user.target

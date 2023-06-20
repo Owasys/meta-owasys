@@ -1,0 +1,9 @@
+[Unit]
+Description=Run every 5 minute to update the timesync and system clock
+[Timer]
+OnBootSec=1min
+OnCalendar=*:0/5
+Unit=owasysd-timesync.service
+
+[Install]
+WantedBy=timers.target

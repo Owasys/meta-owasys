@@ -1,0 +1,9 @@
+[Unit]
+ConditionKernelCommandLine=|bootchooser.active
+ConditionKernelCommandLine=|rauc.slot
+After=owasysd-boot-check.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/rauc status mark-good

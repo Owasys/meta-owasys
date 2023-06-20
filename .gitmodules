@@ -1,0 +1,12 @@
+[submodule "meta-owasys-odm"]
+	path = meta-owasys-odm
+	url = ssh://git@gitlab.owasys.com:1122/cetus/sdk_tools/cetus_yocto/meta-owasys-odm.git
+[submodule "meta-owasys-security"]
+	path = meta-owasys-security
+	url = ssh://git@gitlab.owasys.com:1122/cetus/sdk_tools/cetus_yocto/meta-owasys-security.git
+[submodule "meta-owasys-owa5x"]
+	path = meta-owasys-owa5x
+	url = ssh://git@gitlab.owasys.com:1122/cetus/sdk_tools/cetus_yocto/meta-owasys-owa5x.git
+[submodule "meta-owasys-ml"]
+	path = meta-owasys-ml
+	url = ssh://git@gitlab.owasys.com:1122/cetus/sdk_tools/cetus_yocto/meta-owasys-ml.git

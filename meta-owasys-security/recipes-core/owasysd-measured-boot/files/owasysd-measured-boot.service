@@ -1,0 +1,9 @@
+[Unit]
+Description = Owasys service to extend the PCRs and left a blueprint of the system state.
+After       = local-fs.target systemd-modules-load.service
+
+[Service]
+ExecStart   = /usr/bin/measured-boot-operations.sh
+
+[Install]                 
+WantedBy        = multi-user.target

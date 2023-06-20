@@ -1,9 +1,0 @@
-[Unit]
-Description         = Owasys timer to check if the boot was good after 1min
-DefaultDependencies = no
-
-[Timer]
-OnBootSec=1min
-
-[Install]
-WantedBy=timers.target

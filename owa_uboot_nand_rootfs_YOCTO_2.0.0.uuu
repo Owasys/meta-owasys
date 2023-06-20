@@ -1,11 +1,15 @@
 uuu_version 1.2.39
-#Created: 02-03-2023
+#Created: 01-06-2023
 #Author: Alvaro Guzman Juan
 #Company: Owasys S.L
 
 SDPS: boot -f owa5x-flash.bin 
 
 # Henceforth, we will talk with the uboot we just downloaded to the RAM.
+FB: ucmd led ledsw0:yellow on
+FB: ucmd led ledsw1:green on
+FB: ucmd led ledsw2:red on
+FB: ucmd led ppsgps:orange on
 
 #Bootloader ( owa5x-flash ) -> NAND
 FB: ucmd setenv fastboot_buffer ${loadaddr}
@@ -26,5 +30,13 @@ FB[-t 60000]: ucmd nand write ${fastboot_buffer} NAND.file-systemA ${fastboot_by
 #Rootfs ( rootfs ) -> NAND, partición rootfs B
 FB[-t 20000]: ucmd nand erase.part NAND.file-systemB; 
 FB[-t 60000]: ucmd nand write ${fastboot_buffer} NAND.file-systemB ${fastboot_bytes};
+
+#Program fuses to boot from NAND
+#FB: ucmd fuse prog -y 1 3 98004000
+
+FB: ucmd led ledsw0:yellow off
+# FB: ucmd led ledsw1:green on
+FB: ucmd led ledsw2:red off
+FB: ucmd led ppsgps:orange off
 
 FB: Done

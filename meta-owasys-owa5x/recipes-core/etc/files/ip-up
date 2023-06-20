@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# This script is run by the pppd after the link is established.
+# It uses run-parts to run scripts in /etc/ppp/ip-up.d, so to add routes,
+# set IP address, run the mailq etc. you should create script(s) there.
+#
+# Be aware that other packages may include /etc/ppp/ip-up.d scripts (named
+# after that package), so choose local script names with that in mind.
+#
+# This script is called with the following arguments:
+#    Arg  Name                          Example
+#    $1   Interface name                ppp0
+#    $2   The tty                       ttyS1
+#    $3   The link speed                38400
+#    $4   Local IP number               12.34.56.78
+#    $5   Peer  IP number               12.34.56.99
+#    $6   Optional ``ipparam'' value    foo
+
+# The  environment is cleared before executing this script
+# so the path must be reset
+PATH=/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin
+export PATH
+
+# These variables are for the use of the scripts run by run-parts
+PPP_IFACE="$1"
+PPP_TTY="$2"
+PPP_SPEED="$3"
+PPP_LOCAL="$4"
+PPP_REMOTE="$5"
+PPP_IPPARAM="$6"
+export PPP_IFACE PPP_TTY PPP_SPEED PPP_LOCAL PPP_REMOTE PPP_IPPARAM
+
+# as an additional convenience, $PPP_TTYNAME is set to the tty name,
+# stripped of /dev/ (if present) for easier matching.
+PPP_TTYNAME=`/usr/bin/basename "$2"`
+export PPP_TTYNAME 
+
+# If /var/log/ppp-ipupdown.log exists use it for logging.
+if [ -e /var/log/ppp-ipupdown.log ]; then
+  exec > /var/log/ppp-ipupdown.log 2>&1
+  echo $0 $@
+  echo
+fi
+
+# This script can be used to override the .d files supplied by other packages.
+if [ -x /etc/ppp/ip-up.local ]; then
+  exec /etc/ppp/ip-up.local "$@"
+fi
+
+run-parts /etc/ppp/ip-up.d \
+  --arg="$1" --arg="$2" --arg="$3" --arg="$4" --arg="$5" --arg="$6"
+
+# if pon was called with the "quick" argument, stop pppd
+if [ -e /var/run/ppp-quick ]; then
+  rm /var/run/ppp-quick
+  wait
+  kill $PPPD_PID
+fi
+
+/sbin/ip route del default dev ppp0 metric 0
+/sbin/ip route replace default dev ppp0 metric 1025
+
+
+interface=ppp0
+dns_file=/etc/ppp/resolv.conf
+
+regex_ipv4="(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])"
+regex_ipv6="((([0-9a-fA-F]){1,4})\\:){7}([0-9a-fA-F]){1,4}"
+
+set_dns_subcmd=""
+
+get_dns_list() {
+    # remove commented lines
+    _matched_text=$(grep --invert-match "^#" $dns_file)
+    # get only lines starting with nameserver
+    _matched_text=$(echo "$_matched_text" | grep --extended-regexp "^nameserver")
+    # get only valid IPv4 and IPv6
+   echo "$_matched_text" | grep --extended-regexp --only-matching --regexp="$regex_ipv4" --regexp="$regex_ipv6"
+}
+
+dns_list_array=$(get_dns_list)
+
+set -- ${dns_list_array}
+
+for dns in "$@"; do
+    if [ -n "$dns" ]; then
+        if [ -n "$set_dns_subcmd" ]; then
+            set_dns_subcmd="${set_dns_subcmd} "
+        fi
+
+        set_dns_subcmd="${set_dns_subcmd}--set-dns $dns"
+    fi
+done
+
+if [ ! -z "$set_dns_subcmd" ]; then
+   systemd-resolve --interface "$interface" $set_dns_subcmd
+fi

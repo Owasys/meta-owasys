@@ -1,0 +1,39 @@
+From cddcd4d8bd410262cb3c2254109dd959788f7f2f Mon Sep 17 00:00:00 2001
+From: Angel Falcon <angel.falcon@owasys.com>
+Date: Thu, 1 Jun 2023 11:45:30 +0200
+Subject: [PATCH] Set release version 1.0.8-rc0
+
+---
+ .config          | 2 +-
+ owa5x_config.OWA | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/.config b/.config
+index 11956d7805f5..cc2caa3dbbba 100644
+--- a/.config
++++ b/.config
+@@ -20,7 +20,7 @@ CONFIG_THREAD_INFO_IN_TASK=y
+ #
+ CONFIG_INIT_ENV_ARG_LIMIT=32
+ # CONFIG_COMPILE_TEST is not set
+-CONFIG_LOCALVERSION="-1.0.8"
++CONFIG_LOCALVERSION="-1.0.8-rc0"
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_BUILD_SALT=""
+ CONFIG_DEFAULT_INIT=""
+diff --git a/owa5x_config.OWA b/owa5x_config.OWA
+index 11956d7805f5..cc2caa3dbbba 100644
+--- a/owa5x_config.OWA
++++ b/owa5x_config.OWA
+@@ -20,7 +20,7 @@ CONFIG_THREAD_INFO_IN_TASK=y
+ #
+ CONFIG_INIT_ENV_ARG_LIMIT=32
+ # CONFIG_COMPILE_TEST is not set
+-CONFIG_LOCALVERSION="-1.0.8"
++CONFIG_LOCALVERSION="-1.0.8-rc0"
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_BUILD_SALT=""
+ CONFIG_DEFAULT_INIT=""
+-- 
+2.25.1
+

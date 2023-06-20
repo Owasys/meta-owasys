@@ -1,0 +1,14 @@
+{
+    "name": "pmsrv",
+    "reset_lines": 20,
+    "set_hostname": 1,
+    "set_default": 1,
+    "set_time": 0,
+    "secure_time": 1,
+    "temperature": {
+        "temp_enable": true,
+        "temp_halt": 85,
+        "temp_wake": 75,
+        "off_timeout": 15
+     }
+}

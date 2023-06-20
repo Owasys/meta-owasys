@@ -1,0 +1,8 @@
+[Unit]
+Description=Owasys time-clock synchronization 
+
+[Service]
+ExecStart=/bin/bash /usr/bin/owasys-timesync.sh
+
+[Install]
+WantedBy=multi-user.target

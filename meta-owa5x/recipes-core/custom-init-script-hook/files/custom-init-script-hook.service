@@ -1,9 +1,0 @@
-[Unit]
-Description=Handles hw.json file
-After=pmsrv.service
-
-[Service]
-ExecStart=/usr/bin/manage-hw-file.sh
-
-[Install]
-WantedBy=multi-user.target

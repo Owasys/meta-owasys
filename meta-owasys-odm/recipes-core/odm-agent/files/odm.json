@@ -1,0 +1,119 @@
+{
+   "connection": {
+      "protocol": "ssl",
+      "host": "odm.owasys.com",
+      "port": 8883,
+      "trustfile": "/etc/ssl/certs/owasys_chain.pem",
+      "keepalive": 2400,
+      "retry": 3,
+      "report_tlm": 10,
+      "report_att": 2,
+      "tcp_keepalive": 10,
+      "time_off": 0,
+      "time_on": 0
+   },
+   "auth": {
+      "client-id": "",
+      "token": "",
+      "certfile": "/device/odm/client.pem",
+      "secret": "/device/odm/secret"
+   },
+   "attributes": {
+      "clientKeys": "",
+      "sharedKeys": "fw_title,fw_version,fw_size,fw_checksum,fw_checksum_algorithm,sw_title,sw_version,sw_size,sw_checksum,sw_checksum_algorithm,namespacePrefix"
+   },
+   "redis": {
+      "q-in": "tb-in",
+      "q-in-cli": "tb-in-cli",
+      "q-out": "tb-out",
+      "rpc-in": "tb-rpc-in",
+      "rpc-out": "tb-rpc-out",
+      "telemetry": "tb-telemetry",
+      "msg-len": 5,
+      "send_email_notification": false
+   },
+   "bootstrap": {
+      "protocol": "ssl",
+      "host": "provision.owasys.com",
+      "port": 8884,
+      "trustfile": "/etc/ssl/certs/owasys_chain.pem",
+      "keepalive": 300,
+      "version": 1
+   },
+   "scan": 300,
+   "metrics":{
+      "comments": "scan in seconds, time: send time in minutes, delta in value",
+      "sys":{
+         "lib": "libodm-sys.so",
+         "mid_change": {
+            "scan": 60,
+            "time": 60,
+            "delta": 10,
+            "objects": ["cpu_15", "ram_level"]
+         },
+         "low_change": {
+            "scan": 600,
+            "time": 120,
+            "delta": 10,
+            "objects": ["root_level", "dev_level", "rec_level", "data_level"]
+         },
+         "total":{
+            "scan": 0,
+            "time": 0,
+            "delta": 0,
+            "objects": [ "root_total", "rec_total", "data_level", "dev_level", "ram_total"]
+         }         
+      },
+      "hw":{
+         "lib": "libodm-hw.so",
+         "battery": {
+            "scan": 60,
+            "time": 60,
+            "delta": 3,
+            "objects": ["batPerc"]
+         },
+         "dc": {
+            "scan": 60,
+            "time": 60,
+            "delta": 0.5,
+            "objects": ["dcVolt","batVolt","batStat"]
+         },
+         "temp": {
+            "scan": 60,
+            "time": 60,
+            "delta": 2,
+            "objects": ["board_temp"]
+         }
+      },
+      "net":{
+         "lib": "libodm-net",
+         "rx": {
+            "scan": 10,
+            "time": 60,
+            "delta": 6,
+            "objects": ["dbm"]
+         },
+         "rat":{
+            "scan": 10,
+            "time": 60,
+            "delta": 2,
+            "objects": ["gsm.rat","gsm.q"]
+         },
+         "daily":{
+            "scan": 10,
+            "time": 1440,
+            "delta": 0,
+            "objects": ["ppp0_bytes_sent", "ppp0_bytes_recv"]
+         }
+      },
+      "pos":{
+         "lib": "libodm-position",
+         "position":{
+            "scan": 60,
+            "time": 60,
+            "delta": 0,
+            "objects": ["position"]
+         }
+      }
+   }
+}

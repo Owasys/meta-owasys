@@ -1,0 +1,43 @@
+From 533548d8ad35b2c947f9348fa2b556265061c2fb Mon Sep 17 00:00:00 2001
+From: Alvaro Guzman <alvaro.guzman@owasys.com>
+Date: Wed, 31 May 2023 16:47:45 +0200
+Subject: [PATCH] UBI FAST MAP: speed up boot
+
+Added UBI FAST MAP config and kernel parameter.
+
+Changelog: added
+Signed-off-by: Alvaro Guzman <alvaro.guzman@owasys.com>
+---
+ configs/imx8mp_owa5x_defconfig | 2 ++
+ include/configs/imx8mp_owa5x.h | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/configs/imx8mp_owa5x_defconfig b/configs/imx8mp_owa5x_defconfig
+index 8cd34f64ee..79c5d4a49c 100644
+--- a/configs/imx8mp_owa5x_defconfig
++++ b/configs/imx8mp_owa5x_defconfig
+@@ -183,6 +183,8 @@ CONFIG_MTDIDS_DEFAULT="nand0=nand.0"
+ 
+ #CONFIG_MTDPARTS_DEFAULT="nand.0:8m(NAND.u-boot),8m(NAND.u-boot-bckp),1m(NAND.u-boot-env),1m(NAND.u-boot-env.backup),1m(NAND.dtb),64m(NAND.kernel),-(NAND.file-system)"
+ CONFIG_MTDPARTS_DEFAULT="nand.0:8m(NAND.u-boot),8m(NAND.u-boot-bckp),1m(NAND.u-boot-env),1m(NAND.u-boot-env.backup),503m(NAND.file-systemA),-(NAND.file-systemB)"
++CONFIG_MTD_UBI_FASTMAP=y
++CONFIG_MTD_UBI_FASTMAP_AUTOCONVERT=1
+ CONFIG_CMD_MD5SUM=y
+ CONFIG_VERSION_VARIABLE=y
+ CONFIG_BOOTCOUNT_LIMIT=y 
+diff --git a/include/configs/imx8mp_owa5x.h b/include/configs/imx8mp_owa5x.h
+index a68e5b5c39..cfa25d2c4b 100644
+--- a/include/configs/imx8mp_owa5x.h
++++ b/include/configs/imx8mp_owa5x.h
+@@ -233,7 +233,7 @@
+ 		"root=${nandroot} " \
+ 		"rootfstype=${nandrootfstype}\0" \
+ 	"nandroot=ubi0:rootfs rw ubi.mtd=NAND.file-systemA,4096\0" \
+-	"nandrootfstype=ubifs rootwait=1 quiet\0" \
++	"nandrootfstype=ubifs rootwait=1 quiet ubi.fm_autoconvert=1\0" \
+ 	"nandboot=echo Booting from nand ...; " \
+ 		"run nandargs; " \
+ 		"ubi part NAND.file-systemA; " \
+-- 
+2.25.1
+

@@ -1,0 +1,10 @@
+[Unit]
+Description= checklock service that waits for owaapi.lck to be removed
+Requires=pmsrv.service
+After=pmsrv.service
+
+[Service]
+ExecStart=/usr/bin/owasys-checklock.sh
+
+[Install]
+WantedBy=sysinit.target
